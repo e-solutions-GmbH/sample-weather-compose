@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_small">8dp</dimen>
+    <dimen name="size_medium">16dp</dimen>
+
+    <!-- Text sizes taken from the Google Automotive OS design guidelines
+    https://designguidelines.withgoogle.com/automotive-os-apps/visual-foundations/typography.html -->
+    <dimen name="text_size_body1">32sp</dimen>
+    <dimen name="text_size_body3">24sp</dimen>
+
+    <dimen name="text_size_sub1">22sp</dimen>
+</resources>

@@ -1,0 +1,40 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="fragmentPadding">@dimen/size_small</item>
+    </style>
+
+    <style name="ForecastLocationChooser">
+        <item name="android:textSize">@dimen/text_size_sub1</item>
+    </style>
+
+    <style name="ForecastLocationChooserDropdown">
+        <item name="android:textSize">@dimen/text_size_sub1</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/size_small</item>
+        <item name="android:paddingEnd">@dimen/size_small</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextTitle">
+        <item name="android:textSize">@dimen/text_size_body1</item>
+    </style>
+
+    <style name="TextBody">
+        <item name="android:textSize">@dimen/text_size_body3</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="android:clickable">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
+    </style>
+
+    <style name="ListItemText">
+        <item name="android:textSize">@dimen/text_size_body3</item>
+    </style>
+</resources>
