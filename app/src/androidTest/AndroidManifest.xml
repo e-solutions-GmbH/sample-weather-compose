@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.eso.weather">
+
+    <!-- This is needed to fix running the androidTests when using mockk and the
+    Android Gradle Plugin starting with v3.6.0. Without this, running the tests completely fails
+    with the error "MockK could not self-attach a jvmti agent to the current VM".
+    See: https://github.com/mockk/mockk/issues/297 -->
+    <application
+        android:extractNativeLibs="true"
+        android:forceQueryable="true" />
+    <!-- forceQueryable is needed because Android 11 changed the package visibility. Without this,
+    the Android Test Orchestrator might not find the test APK. -->
+</manifest>
