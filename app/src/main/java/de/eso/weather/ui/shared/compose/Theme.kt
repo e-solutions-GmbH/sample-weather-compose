@@ -14,23 +14,25 @@ object WeatherTheme {
 
     val largeScreenTypography = Typography(
         defaultFontFamily = FontFamily.SansSerif,
-        h6 = TextStyle(fontSize = Dimensions.TitleTextSizeLarge, fontFamily = defaultFontFamily),
-        subtitle1 = TextStyle(fontSize = Dimensions.SubTitleTextSizeLarge, fontFamily = defaultFontFamily),
-        body1 = TextStyle(fontSize = Dimensions.Body1TextSizeLarge, fontFamily = defaultFontFamily),
-        body2 = TextStyle(fontSize = Dimensions.Body2TextSizeLarge, fontFamily = defaultFontFamily),
-        button = TextStyle(fontSize = Dimensions.ButtonTextSizeLarge, fontFamily = defaultFontFamily),
-        caption = TextStyle(fontSize = Dimensions.CaptionTextSizeLarge, fontFamily = defaultFontFamily)
+        h4 = TextStyle(fontSize = Dimensions.HeaderTextSizeLarge),
+        h6 = TextStyle(fontSize = Dimensions.TitleTextSizeLarge),
+        subtitle1 = TextStyle(fontSize = Dimensions.SubTitleTextSizeLarge),
+        body1 = TextStyle(fontSize = Dimensions.Body1TextSizeLarge),
+        body2 = TextStyle(fontSize = Dimensions.Body2TextSizeLarge),
+        button = TextStyle(fontSize = Dimensions.ButtonTextSizeLarge),
+        caption = TextStyle(fontSize = Dimensions.CaptionTextSizeLarge)
     )
+
+    @Composable
+    fun isLargeScreen() = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
 }
 
 @Composable
 fun WeatherTheme(
     content: @Composable () -> Unit
 ) {
-    val isLargeScreen = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
-
     // Choose fitting typography depending on screen size (e.g. larger for Automotive resolutions)
-    val typography = if (isLargeScreen) {
+    val typography = if (WeatherTheme.isLargeScreen()) {
         WeatherTheme.largeScreenTypography
     } else {
         Typography(defaultFontFamily = WeatherTheme.defaultFontFamily)

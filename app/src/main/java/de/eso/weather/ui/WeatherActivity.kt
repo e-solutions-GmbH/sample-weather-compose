@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -86,7 +87,8 @@ class WeatherActivity : AppCompatActivity() {
                             }
                         } else {
                             null
-                        }
+                        },
+                        modifier = Modifier.height(height = Dimensions.TitleBarHeight)
                     )
                 }
             ) {
