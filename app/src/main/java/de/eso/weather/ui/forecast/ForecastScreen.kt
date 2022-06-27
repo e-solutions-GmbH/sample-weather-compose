@@ -14,10 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
@@ -51,6 +49,7 @@ import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.IconAndTextButton
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -207,20 +206,15 @@ fun ForecastScreenActiveLocationForecast(
         }
 
         activeLocationName?.let {
-            Button(
-                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                onClick = { onGoToWeatherAlertsClicked() }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Warning,
-                    contentDescription = "Alerts ",
-                    tint = EsoColors.Orange,
-                    modifier = Modifier
-                        .padding(end = Dimensions.IconPadding)
-                        .size(Dimensions.IconSizeButton)
-                )
-                Text(text = "Alerts for $it")
-            }
+            val buttonText = "Alerts for $it"
+
+            IconAndTextButton(
+                onClick = { onGoToWeatherAlertsClicked() },
+                imageVector = Icons.Filled.Warning,
+                text = buttonText,
+                contentDescription = buttonText,
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -237,61 +231,32 @@ fun ForecastScreenConfigurationPanel(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Button(
-            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
-            onClick = onManageLocationsClicked
-        ) {
-            Icon(
-                imageVector = Icons.Filled.LocationCity,
-                contentDescription = stringResource(R.string.manage_locations_button),
-                tint = EsoColors.Orange,
-                modifier = Modifier
-                    .padding(end = Dimensions.IconPadding)
-                    .size(Dimensions.IconSizeButton)
-            )
-            Text(
-                text = stringResource(R.string.manage_locations_button),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        IconAndTextButton(
+            onClick = onManageLocationsClicked,
+            imageVector = Icons.Filled.LocationCity,
+            text = stringResource(R.string.manage_locations_button),
+            contentDescription = stringResource(R.string.manage_locations_button),
+            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding).fillMaxWidth(),
+            textFillsSpace = true
+        )
 
-        Button(
-            modifier = Modifier
-                .padding(bottom = Dimensions.ButtonPadding)
-                .testTag("simulateLocationGoneButton"),
-            onClick = onSimulateLocationGoneButton
-        ) {
-            Icon(
-                imageVector = Icons.Filled.LocationOff,
-                contentDescription = stringResource(R.string.simulate_location_gone_button),
-                tint = EsoColors.Orange,
-                modifier = Modifier
-                    .padding(end = Dimensions.IconPadding)
-                    .size(Dimensions.IconSizeButton)
-            )
-            Text(
-                text = stringResource(R.string.simulate_location_gone_button),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        IconAndTextButton(
+            onClick = onSimulateLocationGoneButton,
+            imageVector = Icons.Filled.LocationOff,
+            text = stringResource(R.string.simulate_location_gone_button),
+            contentDescription = stringResource(R.string.simulate_location_gone_button),
+            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding).fillMaxWidth(),
+            textFillsSpace = true
+        )
 
-        Button(
-            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
-            onClick = onShowDummySnackbarClicked
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Restaurant,
-                contentDescription = stringResource(R.string.simulate_location_gone_button),
-                tint = EsoColors.Orange,
-                modifier = Modifier
-                    .padding(end = Dimensions.IconPadding)
-                    .size(Dimensions.IconSizeButton)
-            )
-            Text(
-                text = stringResource(R.string.show_dummy_snackbar_button),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        IconAndTextButton(
+            onClick = onShowDummySnackbarClicked,
+            imageVector = Icons.Filled.Restaurant,
+            text = stringResource(R.string.show_dummy_snackbar_button),
+            contentDescription = stringResource(R.string.show_dummy_snackbar_button),
+            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding).fillMaxWidth(),
+            textFillsSpace = true
+        )
     }
 }
 
