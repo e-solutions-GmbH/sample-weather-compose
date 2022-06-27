@@ -4,17 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import de.eso.weather.ui.alert.AlertScreen
 import de.eso.weather.ui.alert.AlertViewModel
 import de.eso.weather.ui.forecast.ForecastScreen
@@ -24,6 +31,8 @@ import de.eso.weather.ui.location.favorites.FavoriteLocationsViewModel
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.routing.api.Routes.ALERT_LOCATION_ID
 import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.EsoColors
+import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.location.LocationResult
 import de.eso.weather.ui.shared.location.LocationSearchApi
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -38,22 +47,65 @@ class WeatherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Column(modifier = Modifier.padding(Dimensions.PADDING_MEDIUM)) {
-                Headline()
-                NavHost()
+            WeatherApp()
+        }
+    }
+
+    @Composable
+    fun WeatherApp() {
+        val navController = rememberNavController()
+
+        var showBackButton by remember { mutableStateOf(false) }
+        var screenName: String? by remember { mutableStateOf(null) }
+
+        navController.addOnDestinationChangedListener { controller, destination, _ ->
+            showBackButton = controller.previousBackStackEntry != null
+
+            screenName = when(destination.route) {
+                Routes.ALERT -> "Alerts"
+                Routes.MANAGE_LOCATIONS -> "Manage Locations"
+                else -> null
+            }
+        }
+
+        WeatherTheme {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        backgroundColor = EsoColors.DarkBlue,
+                        title = { Headline(screenName) },
+                        navigationIcon = if (showBackButton) {
+                            {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowBack,
+                                        tint = EsoColors.Orange,
+                                        contentDescription = "backIcon"
+                                    )
+                                }
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                }
+            ) {
+                NavHost(
+                    navController = navController,
+                    modifier = Modifier.padding(Dimensions.ContentPadding)
+                )
             }
         }
     }
 
     @Composable
-    fun Headline() {
-        Text(text = "Welcome Driver", modifier = Modifier.padding(bottom = Dimensions.PADDING_MEDIUM))
+    fun Headline(screenName: String? = null) {
+        Text(text = screenName ?: "Welcome Driver", color = EsoColors.Orange)
     }
 
     @Composable
-    fun NavHost() {
-        val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = Routes.FORECAST) {
+    fun NavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+        NavHost(navController = navController, startDestination = Routes.FORECAST, modifier = modifier) {
             composable(Routes.FORECAST) { ForecastScreen(navController, forecastViewModel) }
             composable(Routes.ALERT) { navBackStackEntry ->
                 val locationId = requireNotNull(navBackStackEntry.arguments?.getString(ALERT_LOCATION_ID))
@@ -67,8 +119,6 @@ class WeatherActivity : AppCompatActivity() {
                     onPopBackStack = { navController.popBackStack() })
             }
         }
-
-        setupNavigationUi(navController)
     }
 
     private fun onShowLocationActivity() =
@@ -92,10 +142,6 @@ class WeatherActivity : AppCompatActivity() {
         data?.getParcelableExtra<LocationResult>(LocationSearchApi.RESULT_KEY_LOCATION)?.let {
             favoriteLocationsViewModel.onLocationSearchReturned(it.id)
         }
-    }
-
-    private fun setupNavigationUi(navController: NavController) {
-        setupActionBarWithNavController(navController, AppBarConfiguration(navController.graph))
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -25,6 +26,7 @@ import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.WeatherTheme
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -172,8 +174,9 @@ fun ForecastScreenContent(
     }
 }
 
+@Preview(device = Devices.AUTOMOTIVE_1024p)
+@Preview(device = Devices.PIXEL_4)
 @Composable
-@Preview
 fun ForecastScreenContentPreview() {
     val activeLocation = Location("Erlangen")
     val viewState = ForecastViewState(
@@ -181,5 +184,8 @@ fun ForecastScreenContentPreview() {
         weather = WeatherTO("Snow", activeLocation)
     )
     val snackbarHostState = remember { SnackbarHostState() }
-    ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {})
+
+    WeatherTheme {
+        ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {})
+    }
 }

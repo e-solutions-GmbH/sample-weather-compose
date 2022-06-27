@@ -14,6 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rxjava3.subscribeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -21,6 +22,7 @@ import androidx.lifecycle.LiveData
 import de.eso.weather.ui.shared.livedatacommand.LiveDataCommand
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.WeatherTheme
 
 // TODO Als SideEffect lösen! So ist es bestimmt keine gute Idee!
 @Composable
@@ -94,8 +96,11 @@ fun FavoriteLocationsScreenContent(
     }
 }
 
-@Preview
+@Preview(device = Devices.AUTOMOTIVE_1024p)
+@Preview(device = Devices.PIXEL_4)
 @Composable
 fun FavoriteLocationsScreenContentPreview() {
-    FavoriteLocationsScreenContent(listOf(Location("Erlangen")), {}, {})
+    WeatherTheme {
+        FavoriteLocationsScreenContent(listOf(Location("Erlangen")), {}, {})
+    }
 }
