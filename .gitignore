@@ -5,3 +5,5 @@ build/
 local.properties
 .tags*
 .jenkins*
+.hprof
+captures/

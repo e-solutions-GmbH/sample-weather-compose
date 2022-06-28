@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,6 +12,7 @@ import androidx.compose.runtime.rxjava3.subscribeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -21,6 +21,7 @@ import de.eso.weather.R
 import de.eso.weather.domain.alert.api.WeatherAlertTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.WeatherTheme
 
 @Composable
 fun AlertScreen(viewModel: AlertViewModel) {
@@ -80,16 +81,20 @@ fun Alerts(alerts: List<AlertListItem>, modifier: Modifier = Modifier) {
         })
 }
 
-@Preview
+@Preview(device = Devices.AUTOMOTIVE_1024p)
+@Preview(device = Devices.PIXEL_4)
 @Composable
 fun AlertScreenContentPreview() {
     val location = Location("Erlangen")
-    AlertScreenContent(
-        location = location,
-        alerts = listOf(
-            AlertListItem(WeatherAlertTO("Ozone", location)),
-            AlertListItem(WeatherAlertTO("Radiation", location)),
-            AlertListItem(WeatherAlertTO("Snow", location))
+
+    WeatherTheme {
+        AlertScreenContent(
+            location = location,
+            alerts = listOf(
+                AlertListItem(WeatherAlertTO("Ozone", location)),
+                AlertListItem(WeatherAlertTO("Radiation", location)),
+                AlertListItem(WeatherAlertTO("Snow", location))
+            )
         )
-    )
+    }
 }
