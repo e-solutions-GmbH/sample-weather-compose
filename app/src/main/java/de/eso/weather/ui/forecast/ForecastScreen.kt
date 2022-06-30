@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
@@ -66,7 +67,8 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
         onManageLocationsClicked = {
             navController.navigate(Routes.MANAGE_LOCATIONS)
         },
-        viewModel::onSimulateLocationGoneButton
+        viewModel::onSimulateLocationGoneButton,
+        isLargeScreen = WeatherTheme.isLargeScreen()
     )
 
     val showDummySnackbarCommand by viewModel.showDummySnackbar.observeAsState()
@@ -89,7 +91,8 @@ fun ForecastScreenContent(
     onGoToWeatherAlertsClicked: () -> Unit,
     onShowDummySnackbarClicked: () -> Unit,
     onManageLocationsClicked: () -> Unit,
-    onSimulateLocationGoneButton: () -> Unit
+    onSimulateLocationGoneButton: () -> Unit,
+    isLargeScreen: Boolean = false
 ) {
     val locationHeadlineText =
         if (viewState.activeLocation == null) {
@@ -101,8 +104,6 @@ fun ForecastScreenContent(
     val weatherSummary = viewState.weather?.weather
 
     val activeLocationName = viewState.activeLocation?.name
-
-    val isLargeScreen = WeatherTheme.isLargeScreen()
 
     BoxWithConstraints {
         val constraints = ConstraintSet {
@@ -224,7 +225,7 @@ fun ForecastScreenActiveLocationForecast(
     ) {
         Text(
             text = locationHeadlineText,
-            style = WeatherTheme.largeScreenTypography.h4
+            style = MaterialTheme.typography.h4
         )
 
         weatherSummary?.let {
@@ -303,7 +304,7 @@ fun ForecastScreenEsoLogo(
 @Preview(device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun ForecastScreenContentPreviewAutomotive() {
-    ForecastScreenContentPreview()
+    ForecastScreenContentPreview(isLargeScreen = true)
 }
 
 @Preview(device = Devices.PIXEL_4)
@@ -313,7 +314,7 @@ fun ForecastScreenContentPreviewDefault() {
 }
 
 @Composable
-fun ForecastScreenContentPreview() {
+fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
     val activeLocation = Location("Erlangen")
     val viewState = ForecastViewState(
         activeLocation = activeLocation,
@@ -322,6 +323,6 @@ fun ForecastScreenContentPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     WeatherTheme {
-        ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {})
+        ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {}, isLargeScreen)
     }
 }

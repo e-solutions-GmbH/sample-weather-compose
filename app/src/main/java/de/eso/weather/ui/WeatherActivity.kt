@@ -1,6 +1,7 @@
 package de.eso.weather.ui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -19,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -69,7 +72,7 @@ class WeatherActivity : AppCompatActivity() {
             }
         }
 
-        WeatherTheme {
+        WeatherTheme(LocalConfiguration.current.isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -102,7 +105,7 @@ class WeatherActivity : AppCompatActivity() {
 
     @Composable
     fun Headline(screenName: String? = null) {
-        Text(text = screenName ?: "Welcome Driver", color = EsoColors.Orange)
+        Text(text = screenName ?: "Welcome Driver")
     }
 
     @Composable

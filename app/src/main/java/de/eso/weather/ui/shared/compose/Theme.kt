@@ -7,37 +7,56 @@ import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import de.eso.weather.R
 
 object WeatherTheme {
-    val defaultFontFamily = FontFamily.SansSerif
-
-    val largeScreenTypography = Typography(
-        defaultFontFamily = FontFamily.SansSerif,
-        h4 = TextStyle(fontSize = Dimensions.HeaderTextSizeLarge),
-        h6 = TextStyle(fontSize = Dimensions.TitleTextSizeLarge),
-        subtitle1 = TextStyle(fontSize = Dimensions.SubTitleTextSizeLarge),
-        body1 = TextStyle(fontSize = Dimensions.Body1TextSizeLarge),
-        body2 = TextStyle(fontSize = Dimensions.Body2TextSizeLarge),
-        button = TextStyle(fontSize = Dimensions.ButtonTextSizeLarge),
-        caption = TextStyle(fontSize = Dimensions.CaptionTextSizeLarge)
-    )
-
     @Composable
     fun isLargeScreen() = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
+
+    fun typography(isLargeScreen: Boolean = false): Typography {
+        val defaultFontFamily = FontFamily(Font(R.font.calibri))
+        val headlineFontFamily = FontFamily(Font(R.font.cambria))
+
+        val commonTypography = Typography(
+            defaultFontFamily = defaultFontFamily,
+            h4 = TextStyle(fontFamily = headlineFontFamily, color = EsoColors.Orange),
+            h6 = TextStyle(fontFamily = headlineFontFamily, color = EsoColors.Orange)
+        )
+
+        // Choose fitting typography depending on screen size (e.g. larger for Automotive resolutions)
+        val displaySizeAdaptedTypography = if (isLargeScreen) {
+            commonTypography.copy(
+                h4 = commonTypography.h4.copy(fontSize = Dimensions.HeaderTextSizeLarge),
+                h6 = commonTypography.h6.copy(fontSize = Dimensions.TitleTextSizeLarge),
+                subtitle1 = commonTypography.subtitle1.copy(fontSize = Dimensions.SubTitleTextSizeLarge),
+                body1 = commonTypography.body1.copy(fontSize = Dimensions.Body1TextSizeLarge),
+                body2 = commonTypography.body2.copy(fontSize = Dimensions.Body2TextSizeLarge),
+                button = commonTypography.button.copy(fontSize = Dimensions.ButtonTextSizeLarge),
+                caption = commonTypography.caption.copy(fontSize = Dimensions.CaptionTextSizeLarge)
+            )
+        } else {
+            commonTypography.copy(
+                h4 = commonTypography.h4.copy(fontSize = Dimensions.HeaderTextSize),
+                h6 = commonTypography.h6.copy(fontSize = Dimensions.TitleTextSize),
+                subtitle1 = commonTypography.subtitle1.copy(fontSize = Dimensions.SubTitleTextSize),
+                body1 = commonTypography.body1.copy(fontSize = Dimensions.Body1TextSize),
+                body2 = commonTypography.body2.copy(fontSize = Dimensions.Body2TextSize),
+                button = commonTypography.button.copy(fontSize = Dimensions.ButtonTextSize),
+                caption = commonTypography.caption.copy(fontSize = Dimensions.CaptionTextSize)
+            )
+        }
+
+        return displaySizeAdaptedTypography
+    }
 }
 
 @Composable
 fun WeatherTheme(
+    isLargeScreen: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    // Choose fitting typography depending on screen size (e.g. larger for Automotive resolutions)
-    val typography = if (WeatherTheme.isLargeScreen()) {
-        WeatherTheme.largeScreenTypography
-    } else {
-        Typography(defaultFontFamily = WeatherTheme.defaultFontFamily)
-    }
-
     MaterialTheme(
         content = content,
         colors = Colors(
@@ -55,6 +74,6 @@ fun WeatherTheme(
             onError = EsoColors.Red,
             isLight = false
         ),
-        typography = typography
+        typography = WeatherTheme.typography(isLargeScreen)
     )
 }

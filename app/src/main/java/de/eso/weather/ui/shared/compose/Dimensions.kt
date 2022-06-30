@@ -22,6 +22,14 @@ object Dimensions {
     val IconSizeBigLogo = 80.dp
 
     // Generic text sizes
+    val HeaderTextSize = 30.sp
+    val TitleTextSize = 24.sp
+    val SubTitleTextSize = 22.sp
+    val Body1TextSize = 20.sp
+    val Body2TextSize = 18.sp
+    val ButtonTextSize = Body1TextSize
+    val CaptionTextSize = Body2TextSize
+
     val HeaderTextSizeLarge = 50.sp
     val TitleTextSizeLarge = 40.sp
     val SubTitleTextSizeLarge = 34.sp
