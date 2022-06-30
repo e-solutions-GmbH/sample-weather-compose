@@ -2,8 +2,6 @@ package de.eso.weather.ui.forecast
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -27,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +43,7 @@ import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
+import de.eso.weather.ui.shared.compose.components.Tile
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -210,21 +208,7 @@ fun ForecastScreenActiveLocationForecast(
     onGoToWeatherAlertsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = MaterialTheme.colors.surface
-    val borderColor = MaterialTheme.colors.onSurface
-
-    Column(
-        modifier = modifier
-            .border(width = 1.dp, color = borderColor.copy(alpha = 0.502f))
-            .background(
-                brush = Brush.verticalGradient(
-                    Pair(0f, backgroundColor.copy(alpha = 0.8f)),
-                    Pair(0.75f, backgroundColor),
-                    Pair(1f, backgroundColor)
-                )
-            )
-            .padding(all = Dimensions.ContainerPadding)
-    ) {
+    Tile(modifier = modifier) {
         Text(
             text = locationHeadlineText,
             style = MaterialTheme.typography.h4
