@@ -65,7 +65,7 @@ fun WeatherTheme(
             secondary = EsoColors.Blue,
             secondaryVariant = EsoColors.DarkerBlue,
             background = EsoColors.Black,
-            surface = EsoColors.Blue,
+            surface = EsoColors.Black,
             error = EsoColors.DarkBlue,
             onPrimary = EsoColors.White,
             onSecondary = EsoColors.White,

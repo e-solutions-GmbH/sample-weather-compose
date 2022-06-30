@@ -43,8 +43,8 @@ import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.Dimensions
-import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
 import kotlinx.coroutines.launch
 
@@ -102,7 +102,6 @@ fun ForecastScreenContent(
         }
 
     val weatherSummary = viewState.weather?.weather
-
     val activeLocationName = viewState.activeLocation?.name
 
     BoxWithConstraints {
@@ -192,7 +191,7 @@ fun ForecastScreenContent(
             ForecastScreenEsoLogo(
                 modifier = Modifier
                     .layoutId("esoLogo")
-                    .height(Dimensions.IconSizeBigLogo)
+                    .height(if (isLargeScreen) Dimensions.IconSizeBigLogo else Dimensions.IconSizeLogo)
             )
 
             SnackbarHost(
@@ -211,14 +210,17 @@ fun ForecastScreenActiveLocationForecast(
     onGoToWeatherAlertsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val backgroundColor = MaterialTheme.colors.surface
+    val borderColor = MaterialTheme.colors.onSurface
+
     Column(
         modifier = modifier
-            .border(width = 1.dp, color = EsoColors.White.copy(alpha = 0.502f))
+            .border(width = 1.dp, color = borderColor.copy(alpha = 0.502f))
             .background(
                 brush = Brush.verticalGradient(
-                    Pair(0f, EsoColors.DarkBlue),
-                    Pair(0.7f, EsoColors.DarkBlue.copy(alpha = 0.8f)),
-                    Pair(1f, EsoColors.DarkBlue.copy(alpha = 0.3f))
+                    Pair(0f, backgroundColor.copy(alpha = 0.8f)),
+                    Pair(0.75f, backgroundColor),
+                    Pair(1f, backgroundColor)
                 )
             )
             .padding(all = Dimensions.ContainerPadding)
@@ -323,6 +325,7 @@ fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     WeatherTheme {
+        GridBackground()
         ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {}, isLargeScreen)
     }
 }
