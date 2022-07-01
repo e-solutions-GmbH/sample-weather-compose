@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">#00182D</item>
+        <item name="colorPrimaryDark">#001429</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="fragmentPadding">@dimen/size_small</item>

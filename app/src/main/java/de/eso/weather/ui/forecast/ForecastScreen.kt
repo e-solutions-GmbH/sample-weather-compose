@@ -2,15 +2,18 @@ package de.eso.weather.ui.forecast
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
@@ -26,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +46,9 @@ import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
+import de.eso.weather.ui.shared.compose.components.Tile
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -66,7 +70,8 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
         onManageLocationsClicked = {
             navController.navigate(Routes.MANAGE_LOCATIONS)
         },
-        viewModel::onSimulateLocationGoneButton
+        viewModel::onSimulateLocationGoneButton,
+        isLargeScreen = WeatherTheme.isLargeScreen()
     )
 
     val showDummySnackbarCommand by viewModel.showDummySnackbar.observeAsState()
@@ -89,7 +94,8 @@ fun ForecastScreenContent(
     onGoToWeatherAlertsClicked: () -> Unit,
     onShowDummySnackbarClicked: () -> Unit,
     onManageLocationsClicked: () -> Unit,
-    onSimulateLocationGoneButton: () -> Unit
+    onSimulateLocationGoneButton: () -> Unit,
+    isLargeScreen: Boolean = false
 ) {
     val locationHeadlineText =
         if (viewState.activeLocation == null) {
@@ -99,10 +105,7 @@ fun ForecastScreenContent(
         }
 
     val weatherSummary = viewState.weather?.weather
-
     val activeLocationName = viewState.activeLocation?.name
-
-    val isLargeScreen = WeatherTheme.isLargeScreen()
 
     BoxWithConstraints {
         val constraints = ConstraintSet {
@@ -191,7 +194,7 @@ fun ForecastScreenContent(
             ForecastScreenEsoLogo(
                 modifier = Modifier
                     .layoutId("esoLogo")
-                    .height(Dimensions.IconSizeBigLogo)
+                    .height(if (isLargeScreen) Dimensions.IconSizeBigLogo else Dimensions.IconSizeLogo)
             )
 
             SnackbarHost(
@@ -210,28 +213,38 @@ fun ForecastScreenActiveLocationForecast(
     onGoToWeatherAlertsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .border(width = 1.dp, color = EsoColors.White.copy(alpha = 0.502f))
-            .background(
-                brush = Brush.verticalGradient(
-                    Pair(0f, EsoColors.DarkBlue),
-                    Pair(0.7f, EsoColors.DarkBlue.copy(alpha = 0.8f)),
-                    Pair(1f, EsoColors.DarkBlue.copy(alpha = 0.3f))
-                )
-            )
-            .padding(all = Dimensions.ContainerPadding)
-    ) {
+    val weatherIcon = when (weatherSummary) {
+        "Sunshine" -> R.drawable.ic_forecast_sun
+        "Cloudy" -> R.drawable.ic_forecast_cloudy
+        "Rain" -> R.drawable.ic_forecast_rain
+        "Snow" -> R.drawable.ic_forecast_snow
+        "Thunderstorm" -> R.drawable.ic_forecast_thunderstorm
+        else -> R.drawable.ic_forecast_sun
+    }
+
+    Tile(modifier = modifier) {
         Text(
             text = locationHeadlineText,
-            style = WeatherTheme.largeScreenTypography.h4
+            style = MaterialTheme.typography.h4
         )
 
-        weatherSummary?.let {
-            Text(
-                text = weatherSummary,
-                modifier = Modifier.weight(weight = 1f)
-            )
+        Row(modifier = Modifier.weight(1f)) {
+            weatherSummary?.let {
+                Text(
+                    text = weatherSummary,
+                    modifier = Modifier.weight(weight = 1f)
+                )
+                Icon(
+                    painter = painterResource(id = weatherIcon),
+                    contentDescription = weatherSummary,
+                    tint = EsoColors.Orange,
+                    modifier = Modifier
+                        .weight(weight = 2f)
+                        .fillMaxHeight()
+                        .width(width = Dimensions.DecoratorSize)
+                        .padding(bottom = Dimensions.IconPadding)
+                )
+            }
         }
 
         activeLocationName?.let {
@@ -303,7 +316,7 @@ fun ForecastScreenEsoLogo(
 @Preview(device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun ForecastScreenContentPreviewAutomotive() {
-    ForecastScreenContentPreview()
+    ForecastScreenContentPreview(isLargeScreen = true)
 }
 
 @Preview(device = Devices.PIXEL_4)
@@ -313,7 +326,7 @@ fun ForecastScreenContentPreviewDefault() {
 }
 
 @Composable
-fun ForecastScreenContentPreview() {
+fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
     val activeLocation = Location("Erlangen")
     val viewState = ForecastViewState(
         activeLocation = activeLocation,
@@ -322,6 +335,7 @@ fun ForecastScreenContentPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     WeatherTheme {
-        ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {})
+        GridBackground()
+        ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {}, isLargeScreen)
     }
 }
