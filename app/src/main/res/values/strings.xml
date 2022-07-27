@@ -23,8 +23,7 @@
     <string name="favorite_locations_title">Favorite Locations</string>
 
     <!-- Location Search -->
-    <string name="location_search_title">Search</string>
-    <string name="add_location">add location</string>
+    <string name="location_add_title">Add Location</string>
     <string name="popbackstack">popBackStack</string>
     <string name="navigateup">navigateUp</string>
 </resources>
