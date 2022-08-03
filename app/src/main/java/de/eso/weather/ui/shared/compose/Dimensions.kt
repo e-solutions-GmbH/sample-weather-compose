@@ -3,20 +3,16 @@ package de.eso.weather.ui.shared.compose
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// TODO Use proper theming mechanism instead
-
 object Dimensions {
-    val PADDING_MEDIUM = 8.dp
-
     val TitleBarHeight = 100.dp
 
     val TileSizeLarge = 300.dp
     val TileSize = 200.dp
+    val TileSizeSmall = 150.dp
 
     val DecoratorSize = 300.dp
 
     // Padding
-    val TitleBarTitlePadding = 16.dp
     val ContentPadding = 16.dp
     val ContainerPadding = 20.dp
     val IconPadding = 20.dp

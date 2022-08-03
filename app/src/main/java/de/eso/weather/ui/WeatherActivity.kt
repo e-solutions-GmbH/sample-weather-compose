@@ -117,10 +117,7 @@ class WeatherActivity : AppCompatActivity() {
 
     @Composable
     fun Headline(screenName: String? = null) {
-        Text(
-            text = screenName ?: "Welcome Driver",
-            modifier = Modifier.padding(horizontal = Dimensions.TitleBarTitlePadding)
-        )
+        Text(text = screenName ?: "Welcome Driver")
     }
 
     @Composable
