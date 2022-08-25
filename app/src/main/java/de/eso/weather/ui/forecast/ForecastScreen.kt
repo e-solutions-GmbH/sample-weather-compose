@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
@@ -225,7 +224,7 @@ fun ForecastScreenActiveLocationForecast(
     Tile(modifier = modifier) {
         Text(
             text = locationHeadlineText,
-            style = MaterialTheme.typography.h4
+            style = WeatherTheme.typography.h4
         )
 
         Row(modifier = Modifier.weight(1f)) {
