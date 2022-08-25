@@ -75,7 +75,9 @@ fun AlertScreenContent(
             )
         } else {
             Box(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "No warning currently, the weather is fine!")
