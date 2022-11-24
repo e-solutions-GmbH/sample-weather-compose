@@ -3,4 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="esoOrange">#FFF5A000</color>
+    <color name="esoDarkerBlue">#FF0A283D</color>
+    <color name="esoDarkBlue">#FF00192E</color>
+    <color name="esoBlack">#FF000014</color>
 </resources>

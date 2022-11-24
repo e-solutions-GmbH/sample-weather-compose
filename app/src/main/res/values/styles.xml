@@ -1,40 +1,46 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">#001429</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="fragmentPadding">@dimen/size_small</item>
     </style>
 
-    <style name="ForecastLocationChooser">
-        <item name="android:textSize">@dimen/text_size_sub1</item>
+    <style name="SearchLocationTheme" parent="Theme.AppCompat">
+        <item name="android:fontFamily">@font/calibri</item>
+        <item name="android:windowBackground">@color/esoBlack</item>
+
+        <item name="actionBarSize">100dp</item>
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <item name="toolbarNavigationButtonStyle">@style/ToolbarNavigationButtonStyle</item>
     </style>
 
-    <style name="ForecastLocationChooserDropdown">
-        <item name="android:textSize">@dimen/text_size_sub1</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">@dimen/size_small</item>
-        <item name="android:paddingEnd">@dimen/size_small</item>
-        <item name="android:singleLine">true</item>
+    <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/esoDarkBlue</item>
+        <item name="titleTextStyle">@style/ActionBarTitleStyle</item>
     </style>
 
-    <style name="TextTitle">
-        <item name="android:textSize">@dimen/text_size_body1</item>
+    <style name="ActionBarTitleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:fontFamily">@font/cambria</item>
+        <item name="android:textColor">@color/esoOrange</item>
+        <item name="android:textSize">@dimen/titleTextSize</item>
     </style>
 
-    <style name="TextBody">
-        <item name="android:textSize">@dimen/text_size_body3</item>
+    <style name="ToolbarNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="tint">@color/esoOrange</item>
+        <item name="tintMode">multiply</item>
     </style>
 
-    <style name="ListItem">
-        <item name="android:clickable">true</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+    <style name="LocationListItem">
         <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
+        <item name="android:layout_marginBottom">4dp</item>
+
+        <item name="android:paddingHorizontal">@dimen/containerPadding</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@color/esoDarkBlue</item>
     </style>
 
-    <style name="ListItemText">
-        <item name="android:textSize">@dimen/text_size_body3</item>
+    <style name="LocationListItemText">
+        <item name="android:textSize">@dimen/body1TextSize</item>
     </style>
 </resources>

@@ -2,17 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/location_list_item"
-    style="@style/ListItem"
+    style="@style/LocationListItem"
     android:layout_width="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingStart="?attr/fragmentPadding"
-    android:paddingEnd="?attr/fragmentPadding"
     tools:layout_height="?android:attr/listPreferredItemHeight">
 
     <TextView
         android:id="@+id/location_list_item_name"
-        style="@style/ListItemText"
+        style="@style/LocationListItemText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Ammerndorf" />

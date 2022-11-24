@@ -13,7 +13,6 @@ object Dimensions {
     val DecoratorSize = 300.dp
 
     // Padding
-    val TitleBarTitlePadding = 16.dp
     val ContentPadding = 16.dp
     val ContainerPadding = 20.dp
     val IconPadding = 20.dp
