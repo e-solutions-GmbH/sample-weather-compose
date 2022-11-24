@@ -3,6 +3,7 @@ package de.eso.weather.ui.shared.compose
 import android.content.res.Configuration.SCREENLAYOUT_SIZE_LARGE
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -18,7 +19,19 @@ object WeatherTheme {
     @Composable
     fun isLargeScreen() = LocalScreenSize.current.isLargeScreen
 
-    fun typography(isLargeScreen: Boolean = false): Typography {
+    val colors: Colors
+        @Composable
+        get() = MaterialTheme.colors
+
+    val typography: Typography
+        @Composable
+        get() = MaterialTheme.typography
+
+    val shapes: Shapes
+        @Composable
+        get() = MaterialTheme.shapes
+
+    fun createTypography(isLargeScreen: Boolean = false): Typography {
         val defaultFontFamily = FontFamily(Font(R.font.calibri))
         val headlineFontFamily = FontFamily(Font(R.font.cambria))
 
@@ -67,6 +80,7 @@ val LocalScreenSize = staticCompositionLocalOf {
 @Composable
 fun WeatherTheme(
     isLargeScreen: Boolean = false,
+    colorPalette: ColorPalette = ColorPalettes.DarkBlue,
     content: @Composable () -> Unit
 ) {
     val screenSize = ScreenSize(
@@ -76,22 +90,8 @@ fun WeatherTheme(
     CompositionLocalProvider(LocalScreenSize provides screenSize) {
         MaterialTheme(
             content = content,
-            colors = Colors(
-                primary = EsoColors.DarkBlue,
-                primaryVariant = EsoColors.DarkestBlue,
-                secondary = EsoColors.Blue,
-                secondaryVariant = EsoColors.DarkerBlue,
-                background = EsoColors.Black,
-                surface = EsoColors.Black,
-                error = EsoColors.DarkBlue,
-                onPrimary = EsoColors.White,
-                onSecondary = EsoColors.White,
-                onBackground = EsoColors.White,
-                onSurface = EsoColors.White,
-                onError = EsoColors.Red,
-                isLight = false
-            ),
-            typography = WeatherTheme.typography(isLargeScreen)
+            colors = colorPalette.colors,
+            typography = WeatherTheme.createTypography(isLargeScreen)
         )
     }
 }

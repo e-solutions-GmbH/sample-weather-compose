@@ -1,6 +1,7 @@
 package de.eso.weather.ui.shared.compose.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
@@ -9,11 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.eso.weather.ui.shared.compose.WeatherTheme
 import kotlin.math.floor
 
 @Composable
 fun GridBackground(modifier: Modifier = Modifier) {
-    val strokeColor = MaterialTheme.colors.onBackground
+    val strokeColor = WeatherTheme.colors.onBackground
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val strokeWidth = 1f
