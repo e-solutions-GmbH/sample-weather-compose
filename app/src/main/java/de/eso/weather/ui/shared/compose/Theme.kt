@@ -5,6 +5,9 @@ import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -13,7 +16,7 @@ import de.eso.weather.R
 
 object WeatherTheme {
     @Composable
-    fun isLargeScreen() = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
+    fun isLargeScreen() = LocalScreenSize.current.isLargeScreen
 
     fun typography(isLargeScreen: Boolean = false): Typography {
         val defaultFontFamily = FontFamily(Font(R.font.calibri))
@@ -52,28 +55,43 @@ object WeatherTheme {
     }
 }
 
+@Immutable
+data class ScreenSize(
+    val isLargeScreen: Boolean
+)
+
+val LocalScreenSize = staticCompositionLocalOf {
+    ScreenSize(isLargeScreen = false)
+}
+
 @Composable
 fun WeatherTheme(
     isLargeScreen: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    MaterialTheme(
-        content = content,
-        colors = Colors(
-            primary = EsoColors.DarkBlue,
-            primaryVariant = EsoColors.DarkestBlue,
-            secondary = EsoColors.Blue,
-            secondaryVariant = EsoColors.DarkerBlue,
-            background = EsoColors.Black,
-            surface = EsoColors.Black,
-            error = EsoColors.DarkBlue,
-            onPrimary = EsoColors.White,
-            onSecondary = EsoColors.White,
-            onBackground = EsoColors.White,
-            onSurface = EsoColors.White,
-            onError = EsoColors.Red,
-            isLight = false
-        ),
-        typography = WeatherTheme.typography(isLargeScreen)
+    val screenSize = ScreenSize(
+        isLargeScreen = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
     )
+
+    CompositionLocalProvider(LocalScreenSize provides screenSize) {
+        MaterialTheme(
+            content = content,
+            colors = Colors(
+                primary = EsoColors.DarkBlue,
+                primaryVariant = EsoColors.DarkestBlue,
+                secondary = EsoColors.Blue,
+                secondaryVariant = EsoColors.DarkerBlue,
+                background = EsoColors.Black,
+                surface = EsoColors.Black,
+                error = EsoColors.DarkBlue,
+                onPrimary = EsoColors.White,
+                onSecondary = EsoColors.White,
+                onBackground = EsoColors.White,
+                onSurface = EsoColors.White,
+                onError = EsoColors.Red,
+                isLight = false
+            ),
+            typography = WeatherTheme.typography(isLargeScreen)
+        )
+    }
 }
