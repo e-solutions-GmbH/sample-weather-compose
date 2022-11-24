@@ -5,10 +5,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -40,6 +44,7 @@ import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
@@ -208,17 +213,38 @@ fun ForecastScreenActiveLocationForecast(
     onGoToWeatherAlertsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val weatherIcon = when (weatherSummary) {
+        "Sunshine" -> R.drawable.ic_forecast_sun
+        "Cloudy" -> R.drawable.ic_forecast_cloudy
+        "Rain" -> R.drawable.ic_forecast_rain
+        "Snow" -> R.drawable.ic_forecast_snow
+        "Thunderstorm" -> R.drawable.ic_forecast_thunderstorm
+        else -> R.drawable.ic_forecast_sun
+    }
+
     Tile(modifier = modifier) {
         Text(
             text = locationHeadlineText,
             style = MaterialTheme.typography.h4
         )
 
-        weatherSummary?.let {
-            Text(
-                text = weatherSummary,
-                modifier = Modifier.weight(weight = 1f)
-            )
+        Row(modifier = Modifier.weight(1f)) {
+            weatherSummary?.let {
+                Text(
+                    text = weatherSummary,
+                    modifier = Modifier.weight(weight = 1f)
+                )
+                Icon(
+                    painter = painterResource(id = weatherIcon),
+                    contentDescription = weatherSummary,
+                    tint = EsoColors.Orange,
+                    modifier = Modifier
+                        .weight(weight = 2f)
+                        .fillMaxHeight()
+                        .width(width = Dimensions.DecoratorSize)
+                        .padding(bottom = Dimensions.IconPadding)
+                )
+            }
         }
 
         activeLocationName?.let {
