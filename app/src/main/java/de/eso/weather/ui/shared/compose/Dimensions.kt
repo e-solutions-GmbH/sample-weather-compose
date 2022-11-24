@@ -9,10 +9,11 @@ object Dimensions {
     val PADDING_MEDIUM = 8.dp
 
     val TitleBarHeight = 100.dp
-    val ContainerPadding = 20.dp
 
     // Padding
+    val TitleBarTitlePadding = 16.dp
     val ContentPadding = 16.dp
+    val ContainerPadding = 20.dp
     val IconPadding = 20.dp
     val ButtonPadding = 10.dp
 

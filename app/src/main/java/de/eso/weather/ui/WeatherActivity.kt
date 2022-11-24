@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -21,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,6 +39,7 @@ import de.eso.weather.ui.routing.api.Routes.ALERT_LOCATION_ID
 import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.location.LocationResult
 import de.eso.weather.ui.shared.location.LocationSearchApi
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -76,7 +79,7 @@ class WeatherActivity : AppCompatActivity() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        backgroundColor = EsoColors.DarkBlue,
+                        backgroundColor = MaterialTheme.colors.primary,
                         title = { Headline(screenName) },
                         navigationIcon = if (showBackButton) {
                             {
@@ -95,6 +98,15 @@ class WeatherActivity : AppCompatActivity() {
                     )
                 }
             ) {
+                GridBackground(
+                    modifier = Modifier.background(
+                        brush = Brush.verticalGradient(
+                            Pair(0f, EsoColors.Violet.copy(alpha = 0f)),
+                            Pair(0.85f, EsoColors.Violet.copy(alpha = 0f)),
+                            Pair(1f, EsoColors.Violet.copy(alpha = 0.3f))
+                        )
+                    )
+                )
                 NavHost(
                     navController = navController,
                     modifier = Modifier.padding(Dimensions.ContentPadding)
@@ -105,7 +117,10 @@ class WeatherActivity : AppCompatActivity() {
 
     @Composable
     fun Headline(screenName: String? = null) {
-        Text(text = screenName ?: "Welcome Driver")
+        Text(
+            text = screenName ?: "Welcome Driver",
+            modifier = Modifier.padding(horizontal = Dimensions.TitleBarTitlePadding)
+        )
     }
 
     @Composable
