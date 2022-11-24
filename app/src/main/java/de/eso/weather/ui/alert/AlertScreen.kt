@@ -1,7 +1,5 @@
 package de.eso.weather.ui.alert
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,19 +18,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rxjava3.subscribeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import de.eso.weather.R
 import de.eso.weather.domain.alert.api.WeatherAlertTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.Tile
 
 @Composable
 fun AlertScreen(viewModel: AlertViewModel) {
@@ -132,9 +129,6 @@ fun AlertTile(
     alertListItem: AlertListItem,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = MaterialTheme.colors.surface
-    val borderColor = MaterialTheme.colors.onSurface
-
     val alertIcon = when (alertListItem.alert.alert) {
         "Radiation" -> Pair(R.drawable.ic_alert_radiation, EsoColors.Green)
         "Pollen" -> Pair(R.drawable.ic_alert_pollen, EsoColors.Pink)
@@ -142,19 +136,10 @@ fun AlertTile(
         else -> null
     }
 
-    Column(
+    Tile(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .border(width = 1.dp, color = borderColor.copy(alpha = 0.502f))
-            .background(
-                brush = Brush.verticalGradient(
-                    Pair(0f, backgroundColor.copy(alpha = 0.8f)),
-                    Pair(0.75f, backgroundColor),
-                    Pair(1f, backgroundColor)
-                )
-            )
-            .padding(all = Dimensions.ContainerPadding)
     ) {
         alertIcon?.let {
             Icon(
