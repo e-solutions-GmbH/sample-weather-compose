@@ -1,6 +1,8 @@
 package de.eso.weather.ui.location.search
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -23,13 +25,13 @@ class LocationSearchFragment : Fragment(R.layout.fragment_location_search),
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.apply {
             setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel)
             setDisplayHomeAsUpEnabled(true)
-            setTitle(R.string.location_search_title)
+            setTitle(R.string.location_add_title)
+            setHasOptionsMenu(true)
         }
 
         viewBinding = FragmentLocationSearchBinding.bind(view)
 
         with(requireNotNull(viewBinding)) {
-            locationsSearchView.setOnQueryTextListener(this@LocationSearchFragment)
             locationsSearchList.adapter = editLocationsAdapter
         }
 
@@ -48,6 +50,16 @@ class LocationSearchFragment : Fragment(R.layout.fragment_location_search),
     override fun onQueryTextChange(newText: String): Boolean {
         viewModel.onTextSubmit(newText)
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.menu_search, menu)
+
+        val searchView = menu.findItem(R.id.search).actionView as SearchView
+        searchView.setOnQueryTextListener(this@LocationSearchFragment)
+        searchView.setIconifiedByDefault(true)
     }
 
     private fun onLocationSelected(location: Location) {

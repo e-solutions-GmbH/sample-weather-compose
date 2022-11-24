@@ -25,7 +25,7 @@
             android:name=".ui.location.search.LocationSearchActivity"
             android:theme="@style/SearchLocationTheme"
             android:exported="false"
-            android:label="@string/location_search_title"
+            android:label="@string/location_add_title"
             android:launchMode="singleTask" />
 
         <provider
