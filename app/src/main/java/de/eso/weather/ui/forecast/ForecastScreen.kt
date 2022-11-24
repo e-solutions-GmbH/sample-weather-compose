@@ -1,23 +1,46 @@
 package de.eso.weather.ui.forecast
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material.icons.filled.LocationOff
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavController
@@ -26,6 +49,7 @@ import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import kotlinx.coroutines.launch
 
@@ -73,10 +97,230 @@ fun ForecastScreenContent(
     onManageLocationsClicked: () -> Unit,
     onSimulateLocationGoneButton: () -> Unit
 ) {
+    val locationHeadlineText =
+        if (viewState.activeLocation == null) {
+            stringResource(R.string.no_location_selected)
+        } else {
+            viewState.activeLocation.name
+        }
+
+    val weatherSummary = viewState.weather?.weather
+
+    val activeLocationName = viewState.activeLocation?.name
+
+    Box {
+        if (WeatherTheme.isLargeScreen()) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                ForecastScreenActiveLocationForecast(
+                    locationHeadlineText = locationHeadlineText,
+                    weatherSummary = weatherSummary,
+                    activeLocationName = activeLocationName,
+                    onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(3f)
+                        .padding(end = Dimensions.ContainerPadding)
+                )
+
+                Column(
+                    modifier = Modifier
+                        .weight(2f)
+                        .fillMaxHeight()
+                ) {
+                    ForecastScreenConfigurationPanel(
+                        onShowDummySnackbarClicked = onShowDummySnackbarClicked,
+                        onManageLocationsClicked = onManageLocationsClicked,
+                        onSimulateLocationGoneButton = onSimulateLocationGoneButton
+                    )
+
+                    ForecastScreenEsoLogo(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .wrapContentHeight(align = Alignment.Bottom)
+                            .height(Dimensions.IconSizeBigLogo)
+                    )
+                }
+            }
+        } else {
+            Column(modifier = Modifier.fillMaxSize()) {
+                ForecastScreenActiveLocationForecast(
+                    locationHeadlineText = locationHeadlineText,
+                    weatherSummary = weatherSummary,
+                    activeLocationName = activeLocationName,
+                    onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                        .padding(bottom = Dimensions.ContainerPadding)
+                )
+
+                ForecastScreenConfigurationPanel(
+                    onShowDummySnackbarClicked = onShowDummySnackbarClicked,
+                    onManageLocationsClicked = onManageLocationsClicked,
+                    onSimulateLocationGoneButton = onSimulateLocationGoneButton,
+                    modifier = Modifier.weight(1f)
+                )
+
+                ForecastScreenEsoLogo(
+                    modifier = Modifier.height(Dimensions.IconSizeLogo)
+                )
+            }
+        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+    }
+}
+
+@Composable
+fun ForecastScreenActiveLocationForecast(
+    locationHeadlineText: String,
+    weatherSummary: String?,
+    activeLocationName: String?,
+    onGoToWeatherAlertsClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .border(width = 1.dp, color = EsoColors.White.copy(alpha = 0.502f))
+            .background(
+                brush = Brush.verticalGradient(
+                    Pair(0f, EsoColors.DarkBlue),
+                    Pair(0.7f, EsoColors.DarkBlue.copy(alpha = 0.8f)),
+                    Pair(1f, EsoColors.DarkBlue.copy(alpha = 0.3f))
+                )
+            )
+            .padding(all = Dimensions.ContainerPadding)
+    ) {
+        Text(
+            text = locationHeadlineText,
+            style = WeatherTheme.largeScreenTypography.h4
+        )
+
+        weatherSummary?.let {
+            Text(
+                text = weatherSummary,
+                modifier = Modifier.weight(weight = 1f)
+            )
+        }
+
+        activeLocationName?.let {
+            Button(
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+                onClick = { onGoToWeatherAlertsClicked() }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = "Alerts ",
+                    tint = EsoColors.Orange,
+                    modifier = Modifier
+                        .padding(end = Dimensions.IconPadding)
+                        .size(Dimensions.IconSizeButton)
+                )
+                Text(text = "Alerts for $it")
+            }
+        }
+    }
+}
+
+@Composable
+fun ForecastScreenConfigurationPanel(
+    onShowDummySnackbarClicked: () -> Unit,
+    onManageLocationsClicked: () -> Unit,
+    onSimulateLocationGoneButton: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Button(
+            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
+            onClick = onManageLocationsClicked
+        ) {
+            Icon(
+                imageVector = Icons.Filled.LocationCity,
+                contentDescription = stringResource(R.string.manage_locations_button),
+                tint = EsoColors.Orange,
+                modifier = Modifier
+                    .padding(end = Dimensions.IconPadding)
+                    .size(Dimensions.IconSizeButton)
+            )
+            Text(
+                text = stringResource(R.string.manage_locations_button),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Button(
+            modifier = Modifier
+                .padding(bottom = Dimensions.ButtonPadding)
+                .testTag("simulateLocationGoneButton"),
+            onClick = onSimulateLocationGoneButton
+        ) {
+            Icon(
+                imageVector = Icons.Filled.LocationOff,
+                contentDescription = stringResource(R.string.simulate_location_gone_button),
+                tint = EsoColors.Orange,
+                modifier = Modifier
+                    .padding(end = Dimensions.IconPadding)
+                    .size(Dimensions.IconSizeButton)
+            )
+            Text(
+                text = stringResource(R.string.simulate_location_gone_button),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Button(
+            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
+            onClick = onShowDummySnackbarClicked
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Restaurant,
+                contentDescription = stringResource(R.string.simulate_location_gone_button),
+                tint = EsoColors.Orange,
+                modifier = Modifier
+                    .padding(end = Dimensions.IconPadding)
+                    .size(Dimensions.IconSizeButton)
+            )
+            Text(
+                text = stringResource(R.string.show_dummy_snackbar_button),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+fun ForecastScreenEsoLogo(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_eso_logo_colour_negative_rgb),
+        contentDescription = "Eso logo",
+        modifier = modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun ForecastScreenContentDefaultScreenSize(
+    locationHeadlineText: String,
+    weatherSummary: String?,
+    activeLocationName: String?,
+    snackbarHostState: SnackbarHostState,
+    onGoToWeatherAlertsClicked: () -> Unit,
+    onShowDummySnackbarClicked: () -> Unit,
+    onManageLocationsClicked: () -> Unit,
+    onSimulateLocationGoneButton: () -> Unit
+) {
     BoxWithConstraints {
         val constraints = ConstraintSet {
             val locationHeadline = createRefFor("locationHeadline")
-            val weatherSummary = createRefFor("weatherSummary")
+            val weatherSummaryRef = createRefFor("weatherSummary")
             val alertsButton = createRefFor("alertsButton")
             val manageLocationsButton = createRefFor("manageLocationsButton")
             val showDummySbackbarButton = createRefFor("showDummySnackbarButton")
@@ -87,12 +331,12 @@ fun ForecastScreenContent(
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
             }
-            constrain(weatherSummary) {
+            constrain(weatherSummaryRef) {
                 top.linkTo(locationHeadline.bottom)
                 start.linkTo(parent.start)
             }
             constrain(alertsButton) {
-                top.linkTo(weatherSummary.bottom, margin = Dimensions.PADDING_MEDIUM)
+                top.linkTo(weatherSummaryRef.bottom, margin = Dimensions.PADDING_MEDIUM)
                 start.linkTo(parent.start)
             }
             constrain(manageLocationsButton) {
@@ -115,16 +359,9 @@ fun ForecastScreenContent(
             }
         }
         ConstraintLayout(constraints, modifier = Modifier.fillMaxSize()) {
-            val locationHeadlineText =
-                if (viewState.activeLocation == null) {
-                    stringResource(R.string.no_location_selected)
-                } else {
-                    viewState.activeLocation.name
-                }
-
-            if (viewState.weather?.weather != null) {
+            weatherSummary?.let {
                 Text(
-                    text = viewState.weather.weather,
+                    text = it,
                     modifier = Modifier.layoutId("weatherSummary")
                 )
             }
@@ -134,12 +371,12 @@ fun ForecastScreenContent(
                 modifier = Modifier.layoutId("locationHeadline")
             )
 
-            if (viewState.activeLocation != null) {
+            activeLocationName?.let {
                 Button(
                     modifier = Modifier.layoutId("alertsButton"),
                     onClick = { onGoToWeatherAlertsClicked() }
                 ) {
-                    Text(text = "Alerts for ${viewState.activeLocation.name}")
+                    Text(text = "Alerts for $it")
                 }
             }
 
@@ -175,7 +412,17 @@ fun ForecastScreenContent(
 }
 
 @Preview(device = Devices.AUTOMOTIVE_1024p)
+@Composable
+fun ForecastScreenContentPreviewAutomotive() {
+    ForecastScreenContentPreview()
+}
+
 @Preview(device = Devices.PIXEL_4)
+@Composable
+fun ForecastScreenContentPreviewDefault() {
+    ForecastScreenContentPreview()
+}
+
 @Composable
 fun ForecastScreenContentPreview() {
     val activeLocation = Location("Erlangen")
