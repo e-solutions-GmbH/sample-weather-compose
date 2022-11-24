@@ -14,6 +14,10 @@ object EsoColors {
 
     val Violet = Color(76, 76, 111)
 
+    val Pink = Color(190, 86, 131, 255)
+
+    val Green = Color(19, 111, 19, 255)
+
     val Black = Color(0, 0, 20)
     val White = Color.White
 }

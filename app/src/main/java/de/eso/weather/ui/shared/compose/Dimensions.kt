@@ -9,6 +9,8 @@ object Dimensions {
     val PADDING_MEDIUM = 8.dp
 
     val TitleBarHeight = 100.dp
+    val TileSizeLarge = 300.dp
+    val TileSize = 200.dp
 
     // Padding
     val TitleBarTitlePadding = 16.dp
