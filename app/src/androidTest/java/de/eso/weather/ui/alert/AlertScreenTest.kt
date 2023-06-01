@@ -7,7 +7,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @Suppress("PrivatePropertyName")
-class AlertFragmentTest {
+class AlertScreenTest {
 
     private val ERLANGEN = Locations.knownLocations.first { it.name == "Erlangen" }
     private val ALERT_RADIATION = WeatherAlertTO("RADIATION", ERLANGEN)
@@ -22,12 +22,11 @@ class AlertFragmentTest {
             AlertScreenContent(
                 location = ERLANGEN,
                 alerts = listOf(AlertListItem(ALERT_RADIATION)),
-                onPopBackstackClicked = { },
-                onNavigateUpClicked = { }
+                isLargeScreen = false
             )
         }
 
         // THEN
-        AlertFragmentPage(composeTestRule).locationIsVisible("Erlangen")
+        AlertScreenPage(composeTestRule).locationIsVisible("Erlangen")
     }
 }

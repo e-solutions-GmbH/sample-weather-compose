@@ -36,7 +36,7 @@ class ForecastScreenMediumTest: KoinTest {
 
     private val navController: NavController = mockk(relaxed = true)
 
-    private val weatherFragmentPage = WeatherFragmentPage(
+    private val weatherScreenPage = WeatherScreenPage(
         InstrumentationRegistry.getInstrumentation().targetContext,
         composeTestRule
     )
@@ -60,7 +60,7 @@ class ForecastScreenMediumTest: KoinTest {
         showScreen()
 
         // THEN
-        weatherFragmentPage
+        weatherScreenPage
             .weatherIsVisible(GOOD_WEATHER)
     }
 
@@ -70,7 +70,7 @@ class ForecastScreenMediumTest: KoinTest {
         showScreen()
 
         // THEN
-        weatherFragmentPage
+        weatherScreenPage
             .dummySnackbarButtonIsVisible()
     }
 

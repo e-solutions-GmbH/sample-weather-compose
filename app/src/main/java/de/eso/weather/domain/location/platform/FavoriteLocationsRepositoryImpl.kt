@@ -76,7 +76,7 @@ class FavoriteLocationsRepositoryImpl(
     override fun saveLocation(location: Location) {
         preferenceStore
             .updateDataAsync { preferences: Preferences ->
-                val currentLocations: List<Location> = savedLocationsSubject.value
+                val currentLocations: List<Location> = savedLocationsSubject.value ?: emptyList()
 
                 if (location !in currentLocations) {
                     val updatedLocations: List<Location> = currentLocations.plus(location)
@@ -98,7 +98,7 @@ class FavoriteLocationsRepositoryImpl(
     override fun deleteLocation(location: Location) {
         preferenceStore
             .updateDataAsync { preferences ->
-                val currentLocations: List<Location> = savedLocationsSubject.value
+                val currentLocations: List<Location> = savedLocationsSubject.value ?: emptyList()
                 if (location in currentLocations) {
                     val updatedLocations: List<Location> = currentLocations.minus(location)
 

@@ -10,7 +10,7 @@ import de.eso.weather.R
 import de.eso.weather.ui.onTextInButton
 
 @Suppress("HasPlatformType")
-class WeatherFragmentPage(private val context: Context, private val composeTestRule: ComposeTestRule) {
+class WeatherScreenPage(private val context: Context, private val composeTestRule: ComposeTestRule) {
 
     private val MANAGE_LOCATIONS_BUTTON = composeTestRule.onNodeWithText(context.resources.getString(R.string.manage_locations_button))
     private val DUMMY_SBACKBAR_BUTTON = composeTestRule.onTextInButton(context.resources.getString(R.string.show_dummy_snackbar_button))

@@ -4,8 +4,6 @@ import android.app.Activity.RESULT_OK
 import android.app.Instrumentation.ActivityResult
 import android.content.Context
 import android.content.Intent
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.printToLog
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.rxjava3.RxDataStore
@@ -19,14 +17,13 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.forecast.service.ForecastProvider
-import de.eso.weather.domain.location.api.FavoriteLocationsRepository
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.domain.shared.platform.Locations
 import de.eso.weather.ui.Intents.initIntents
 import de.eso.weather.ui.Intents.releaseIntents
 import de.eso.weather.ui.WeatherActivity
 import de.eso.weather.ui.createBeforeAndroidComposeRule
-import de.eso.weather.ui.forecast.WeatherFragmentPage
+import de.eso.weather.ui.forecast.WeatherScreenPage
 import de.eso.weather.ui.location.search.LocationSearchActivity
 import de.eso.weather.ui.shared.location.LocationResult
 import de.eso.weather.ui.shared.location.LocationSearchApi.RESULT_KEY_LOCATION
@@ -53,7 +50,7 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    private val weatherFragmentPage = WeatherFragmentPage(context, composeTestRule)
+    private val weatherScreenPage = WeatherScreenPage(context, composeTestRule)
     private val favoriteLocationsPage = FavoriteLocationsPage(context, composeTestRule)
 
     private val rxDataStore: RxDataStore<Preferences> by inject()
@@ -81,7 +78,7 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
     @Test
     fun should_show_the_favorite_locations() {
         // GIVEN
-        weatherFragmentPage.clickManageLocationsButton()
+        weatherScreenPage.clickManageLocationsButton()
 
         // THEN
         favoriteLocationsPage.locationIsVisible("Erlangen")
@@ -91,7 +88,7 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
     fun should_navigate_to_the_location_search_screen_when_clicking_the_add_location_button() {
         // GIVEN
         stubLocationActivityIntent()
-        weatherFragmentPage.clickManageLocationsButton()
+        weatherScreenPage.clickManageLocationsButton()
 
         // WHEN
         favoriteLocationsPage.clickAddLocationButton()
@@ -107,7 +104,7 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
             putExtra(RESULT_KEY_LOCATION, LocationResult(AMMERNDORF.id, AMMERNDORF.name))
         })
 
-        weatherFragmentPage.clickManageLocationsButton()
+        weatherScreenPage.clickManageLocationsButton()
 
         // WHEN
         favoriteLocationsPage.clickAddLocationButton()

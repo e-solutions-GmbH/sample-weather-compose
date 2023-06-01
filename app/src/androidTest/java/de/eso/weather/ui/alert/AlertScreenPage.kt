@@ -4,7 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 
-class AlertFragmentPage(private val composeTestRule: ComposeTestRule) {
+class AlertScreenPage(private val composeTestRule: ComposeTestRule) {
 
     fun isVisible() {
         composeTestRule.onNodeWithText("Alerts for", substring = true).assertIsDisplayed()
