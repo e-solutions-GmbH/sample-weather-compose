@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.eso.weather">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- This is needed to fix running the androidTests when using mockk and the
     Android Gradle Plugin starting with v3.6.0. Without this, running the tests completely fails

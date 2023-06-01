@@ -57,6 +57,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    namespace = "de.eso.weather"
+    testNamespace = "de.eso.weather.test"
 }
 
 val lifecycleVersion = "2.4.1"
