@@ -246,6 +246,7 @@ class WeatherActivity : AppCompatActivity() {
             LocationSearchApi.getLocationActivityIntent(this), REQUEST_CODE_CHOOSE_LOCATION
         )
 
+    @Deprecated("Deprecated in base class")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

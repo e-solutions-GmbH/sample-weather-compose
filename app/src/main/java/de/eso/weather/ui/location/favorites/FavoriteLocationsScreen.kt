@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -64,11 +64,11 @@ fun FavoriteLocationsScreenContent(
 ) {
     Box {
         LazyVerticalGrid(
-            cells = GridCells.Fixed(count = if (isLargeScreen) 3 else 2),
+            columns = GridCells.Fixed(count = if (isLargeScreen) 3 else 2),
             verticalArrangement = Arrangement.spacedBy(space = Dimensions.ContainerPadding),
             horizontalArrangement = Arrangement.spacedBy(space = Dimensions.ContainerPadding),
             content = {
-                items(items = locations) { location ->
+                items(items = locations, key = {item: Location -> item.id}) { location ->
                     FavoriteLocationTile(
                         locationName = location.name,
                         onClick = { onLocationSelected(location) }

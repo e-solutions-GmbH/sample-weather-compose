@@ -16,7 +16,10 @@ class ForecastScreenContentTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val weatherFragmentPage = WeatherFragmentPage(InstrumentationRegistry.getInstrumentation().targetContext, composeTestRule)
+    private val weatherScreenPage = WeatherScreenPage(
+        InstrumentationRegistry.getInstrumentation().targetContext,
+        composeTestRule
+    )
 
     @Test
     fun should_show_the_current_weather() {
@@ -24,7 +27,7 @@ class ForecastScreenContentTest {
         showScreen()
 
         // THEN
-        weatherFragmentPage
+        weatherScreenPage
             .weatherIsVisible(GOOD_WEATHER)
     }
 
@@ -34,7 +37,7 @@ class ForecastScreenContentTest {
         showScreen()
 
         // THEN
-        weatherFragmentPage
+        weatherScreenPage
             .dummySnackbarButtonIsVisible()
     }
 
@@ -45,8 +48,9 @@ class ForecastScreenContentTest {
                 snackbarHostState = SnackbarHostState(),
                 onGoToWeatherAlertsClicked = { },
                 onShowDummySnackbarClicked = { },
-                onManageLocationsClicked = { }) {
-            }
+                onManageLocationsClicked = { },
+                onSimulateLocationGoneButton = { }
+            )
         }
     }
 

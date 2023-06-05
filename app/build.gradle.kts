@@ -3,13 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.1.1"
+val composeCompilerVersion = "1.4.7"
+val composeBomVersion = "2023.05.01"
 
 android {
     defaultConfig {
         minSdk = 26
-        compileSdk = 31
-        targetSdk = 30
+        compileSdk = 33
+        targetSdk = 33
         applicationId = "de.eso.weather.compose"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["coverage"] = "true"
@@ -25,7 +26,7 @@ android {
         }
 
         composeOptions {
-            kotlinCompilerExtensionVersion = composeVersion
+            kotlinCompilerExtensionVersion = composeCompilerVersion
         }
 
         kotlinOptions {
@@ -74,10 +75,8 @@ val assertjVersion = "3.18.1"
 
 // Main Dependencies
 dependencies {
-
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.core:core-ktx:1.10.1")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
@@ -87,39 +86,36 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 
     // Jetpack Compose
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
-    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+
+    implementation("androidx.compose.compiler:compiler:$composeCompilerVersion")
+    implementation("androidx.compose.ui:ui")
     // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling")
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation("androidx.compose.foundation:foundation:$composeVersion")
+    implementation("androidx.compose.foundation:foundation")
     // Material Design
-    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material")
     // Material design icons
-    implementation("androidx.compose.material:material-icons-core:$composeVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
     // Integration with observables
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata")
+    implementation("androidx.compose.runtime:runtime-rxjava3")
+    // ConstraintLayout
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10")
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
-
-    // UI Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
 
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-scope:$koinVersion")
     implementation("io.insert-koin:koin-androidx-viewmodel:$koinVersion")
     implementation("io.insert-koin:koin-androidx-fragment:$koinVersion")
 
-    implementation("com.google.android.material:material:1.5.0")
-
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
-
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha02")
-
-    implementation("androidx.navigation:navigation-compose:2.5.0-rc02")
 
     implementation("com.squareup.moshi:moshi:$moshiVersion")
     implementation("com.squareup.moshi:moshi-adapters:$moshiVersion")
@@ -128,7 +124,7 @@ dependencies {
 
 // Unit Test Dependencies
 dependencies {
-    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
 
@@ -142,23 +138,20 @@ dependencies {
 
 // androidTest Dependencies
 dependencies {
-    androidTestImplementation("androidx.navigation:navigation-testing:$navigationVersion")
-    androidTestImplementation("androidx.test:core:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.4.0")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation("org.assertj:assertj-core:$assertjVersion")
 
     androidTestImplementation("io.insert-koin:koin-test:$koinVersion")
-    debugImplementation("androidx.fragment:fragment-testing:1.4.1") {
-        exclude("androidx.test", "core")
-    }
 
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
 
-    // 1.4.0 on purpose, because Google has not released v1.4.1 of the runner, yet.
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.1")
+    // Compose
+    androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
