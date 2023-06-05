@@ -31,25 +31,13 @@ class ForecastScreenContentTest {
             .weatherIsVisible(GOOD_WEATHER)
     }
 
-    @Test
-    fun should_show_the_dummy_snackbar_button() {
-        // GIVEN
-        showScreen()
-
-        // THEN
-        weatherScreenPage
-            .dummySnackbarButtonIsVisible()
-    }
-
     private fun showScreen() {
         composeTestRule.setContent {
             ForecastScreenContent(
                 viewState = ForecastViewState(ERLANGEN, WeatherTO(GOOD_WEATHER, ERLANGEN)),
                 snackbarHostState = SnackbarHostState(),
                 onGoToWeatherAlertsClicked = { },
-                onShowDummySnackbarClicked = { },
-                onManageLocationsClicked = { },
-                onSimulateLocationGoneButton = { }
+                onManageLocationsClicked = { }
             )
         }
     }

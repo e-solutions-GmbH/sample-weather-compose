@@ -4,11 +4,6 @@
     <!-- Forecast -->
     <string name="manage_locations_button">Manage locations</string>
 
-    <string name="show_dummy_snackbar_button">Show Dummy Snackbar</string>
-    <string name="dummy_snackbar_text">This is a dummy snackbar</string>
-
-    <string name="simulate_location_gone_button">Simulate location gone</string>
-
     <string name="weather_not_available">Not yet available</string>
     <string name="weather_alerts_button">Weather Alerts for %1$s</string>
 

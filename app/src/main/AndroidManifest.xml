@@ -21,13 +21,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.location.search.LocationSearchActivity"
-            android:theme="@style/SearchLocationTheme"
-            android:exported="false"
-            android:label="@string/location_add_title"
-            android:launchMode="singleTask" />
-
         <provider
             android:name="de.eso.weather.InitProvider"
             android:authorities="de.eso.weather.compose"

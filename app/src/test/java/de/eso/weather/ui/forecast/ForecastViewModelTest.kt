@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.reactivex.rxjava3.core.Observable.just
-import io.reactivex.rxjava3.core.Observable.never
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -55,20 +54,6 @@ class ForecastViewModelTest {
                 WEATHER_IN_ERLANGEN
             )
         )
-    }
-
-    @Test
-    fun `Should show the dummy snackbar when the show dummy snackbar button has been clicked`() {
-        // GIVEN
-        setupActiveLocation()
-        every { weatherForecastService.getWeather(any()) } returns never()
-        createViewModel()
-
-        // WHEN
-        forecastViewModel.onShowDummySnackbarClicked()
-
-        // THEN
-        assertThat(forecastViewModel.showDummySnackbar).isNotNull
     }
 
     private fun setupAvailableLocations() {

@@ -1,18 +1,18 @@
 package de.eso.weather.ui.location.search
 
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import de.eso.weather.ui.shared.livedatacommand.LiveDataEvent
-import de.eso.weather.ui.shared.livedatacommand.send
 import de.eso.weather.domain.location.api.LocationService
 import de.eso.weather.domain.shared.api.Location
+import de.eso.weather.ui.shared.livedatacommand.LiveDataEvent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 
 class LocationSearchViewModel(private val locationService: LocationService) : ViewModel() {
 
-    val locationsResult = MutableLiveData<List<Location>>()
-    val finishWithResult = MutableLiveData<LiveDataEvent<Location>>()
+    val queryInput = mutableStateOf("")
+    val locations = mutableStateOf(emptyList<Location>())
+    val finishWithResult = mutableStateOf<LiveDataEvent<Location>?>(null)
 
     private val disposables = CompositeDisposable()
 
@@ -20,17 +20,18 @@ class LocationSearchViewModel(private val locationService: LocationService) : Vi
         triggerLocationSearch("")
     }
 
-    fun onTextSubmit(query: String) {
+    fun onQueryChanged(query: String) {
+        queryInput.value = query
         triggerLocationSearch(query)
     }
 
     fun onLocationSelected(location: Location) {
-        finishWithResult.send(location)
+        finishWithResult.value = LiveDataEvent(location)
     }
 
     private fun triggerLocationSearch(query: String) {
-        locationService.queryLocations(query).subscribe { locations ->
-            locationsResult.value = locations
+        locationService.queryLocations(query).subscribe { foundLocations ->
+            locations.value = foundLocations
         }.addTo(disposables)
     }
 

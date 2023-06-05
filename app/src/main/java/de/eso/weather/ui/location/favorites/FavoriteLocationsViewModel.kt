@@ -18,8 +18,6 @@ class FavoriteLocationsViewModel(
     private val disposables = CompositeDisposable()
 
     val locations = favoriteLocationsRepository.savedLocations
-
-    val showLocationActivity = MutableLiveData<LiveDataCommand>()
     val finishScreen = MutableLiveData<LiveDataCommand>()
 
     fun onLocationSelected(location: Location) {
@@ -31,10 +29,6 @@ class FavoriteLocationsViewModel(
         locationService.getLocation(id).subscribe {
             favoriteLocationsRepository.saveLocation(it)
         }.addTo(disposables)
-    }
-
-    fun onEditLocationsClicked() {
-        showLocationActivity.send()
     }
 
     override fun onCleared() {
