@@ -65,11 +65,9 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
                 )
             )
         },
-        viewModel::onShowDummySnackbarClicked,
         onManageLocationsClicked = {
             navController.navigate(Routes.MANAGE_LOCATIONS)
         },
-        viewModel::onSimulateLocationGoneButton,
         isLargeScreen = WeatherTheme.isLargeScreen()
     )
 
@@ -91,9 +89,7 @@ fun ForecastScreenContent(
     viewState: ForecastViewState,
     snackbarHostState: SnackbarHostState,
     onGoToWeatherAlertsClicked: () -> Unit,
-    onShowDummySnackbarClicked: () -> Unit,
     onManageLocationsClicked: () -> Unit,
-    onSimulateLocationGoneButton: () -> Unit,
     isLargeScreen: Boolean = false
 ) {
     val locationHeadlineText =
@@ -184,9 +180,7 @@ fun ForecastScreenContent(
             )
 
             ForecastScreenConfigurationPanel(
-                onShowDummySnackbarClicked = onShowDummySnackbarClicked,
                 onManageLocationsClicked = onManageLocationsClicked,
-                onSimulateLocationGoneButton = onSimulateLocationGoneButton,
                 modifier = Modifier.layoutId("configurationPanel")
             )
 
@@ -262,9 +256,7 @@ fun ForecastScreenActiveLocationForecast(
 
 @Composable
 fun ForecastScreenConfigurationPanel(
-    onShowDummySnackbarClicked: () -> Unit,
     onManageLocationsClicked: () -> Unit,
-    onSimulateLocationGoneButton: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -277,24 +269,6 @@ fun ForecastScreenConfigurationPanel(
             imageVector = Icons.Filled.LocationCity,
             text = stringResource(R.string.manage_locations_button),
             contentDescription = stringResource(R.string.manage_locations_button),
-            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
-            textFillsSpace = true
-        )
-
-        IconAndTextButton(
-            onClick = onSimulateLocationGoneButton,
-            imageVector = Icons.Filled.LocationOff,
-            text = stringResource(R.string.simulate_location_gone_button),
-            contentDescription = stringResource(R.string.simulate_location_gone_button),
-            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
-            textFillsSpace = true
-        )
-
-        IconAndTextButton(
-            onClick = onShowDummySnackbarClicked,
-            imageVector = Icons.Filled.Restaurant,
-            text = stringResource(R.string.show_dummy_snackbar_button),
-            contentDescription = stringResource(R.string.show_dummy_snackbar_button),
             modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
             textFillsSpace = true
         )
@@ -335,6 +309,6 @@ fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
 
     WeatherTheme {
         GridBackground()
-        ForecastScreenContent(viewState, snackbarHostState, {}, {}, {}, {}, isLargeScreen)
+        ForecastScreenContent(viewState, snackbarHostState, {}, {}, isLargeScreen)
     }
 }
