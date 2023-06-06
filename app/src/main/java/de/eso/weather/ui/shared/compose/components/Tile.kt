@@ -19,8 +19,8 @@ import de.eso.weather.ui.shared.compose.WeatherTheme
 
 @Composable
 fun Tile(
-    borderColor: Color = WeatherTheme.colors.onSecondary,
-    backgroundColor: Color = WeatherTheme.colors.secondaryVariant,
+    borderColor: Color = WeatherTheme.colorPalette.colors.onSecondary,
+    backgroundColor: Color = WeatherTheme.colorPalette.colors.secondaryVariant,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     modifier: Modifier = Modifier,

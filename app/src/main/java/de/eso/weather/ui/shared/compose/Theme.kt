@@ -1,13 +1,13 @@
 package de.eso.weather.ui.shared.compose
 
 import android.content.res.Configuration.SCREENLAYOUT_SIZE_LARGE
-import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
@@ -19,9 +19,9 @@ object WeatherTheme {
     @Composable
     fun isLargeScreen() = LocalScreenSize.current.isLargeScreen
 
-    val colors: Colors
+    val colorPalette: ColorPalette
         @Composable
-        get() = MaterialTheme.colors
+        get() = LocalColorPalette.current
 
     val typography: Typography
         @Composable
@@ -77,6 +77,8 @@ val LocalScreenSize = staticCompositionLocalOf {
     ScreenSize(isLargeScreen = false)
 }
 
+val LocalColorPalette = compositionLocalOf { ColorPalettes.DarkBlue }
+
 @Composable
 fun WeatherTheme(
     isLargeScreen: Boolean = false,
@@ -87,7 +89,10 @@ fun WeatherTheme(
         isLargeScreen = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
     )
 
-    CompositionLocalProvider(LocalScreenSize provides screenSize) {
+    CompositionLocalProvider(
+        LocalScreenSize provides screenSize,
+        LocalColorPalette provides colorPalette
+    ) {
         MaterialTheme(
             content = content,
             colors = colorPalette.colors,

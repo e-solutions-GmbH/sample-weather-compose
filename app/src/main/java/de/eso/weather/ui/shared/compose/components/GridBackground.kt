@@ -13,7 +13,7 @@ import kotlin.math.floor
 
 @Composable
 fun GridBackground(modifier: Modifier = Modifier) {
-    val strokeColor = WeatherTheme.colors.onBackground
+    val strokeColor = WeatherTheme.colorPalette.colors.onBackground
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val strokeWidth = 1f

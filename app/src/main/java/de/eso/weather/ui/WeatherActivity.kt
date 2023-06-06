@@ -1,5 +1,6 @@
 package de.eso.weather.ui
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -74,6 +75,7 @@ class WeatherActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
     fun WeatherApp() {
         val navController = rememberNavController()
@@ -102,7 +104,7 @@ class WeatherActivity : AppCompatActivity() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        backgroundColor = WeatherTheme.colors.primary,
+                        backgroundColor = WeatherTheme.colorPalette.colors.primary,
                         title = { Headline(screenName) },
                         navigationIcon = if (showBackButton) {
                             {
@@ -204,7 +206,7 @@ class WeatherActivity : AppCompatActivity() {
         ) {
             Column(
                 modifier = Modifier
-                    .background(color = WeatherTheme.colors.secondary)
+                    .background(color = WeatherTheme.colorPalette.colors.secondary)
                     .padding(all = Dimensions.ContainerPadding)
             ) {
                 Box(
@@ -234,7 +236,7 @@ class WeatherActivity : AppCompatActivity() {
                                 selected = selectedColorPalette == colorPalette,
                                 onClick = null,
                                 colors = RadioButtonDefaults.colors(
-                                    selectedColor = WeatherTheme.colors.onSecondary
+                                    selectedColor = WeatherTheme.colorPalette.colors.onSecondary
                                 ),
                                 modifier = Modifier
                                     .padding(end = Dimensions.ContentPadding)
@@ -243,7 +245,7 @@ class WeatherActivity : AppCompatActivity() {
                             Text(
                                 text = colorPalette.name,
                                 style = WeatherTheme.typography.body2,
-                                color = WeatherTheme.colors.onSecondary
+                                color = WeatherTheme.colorPalette.colors.onSecondary
                             )
                         }
                     }
