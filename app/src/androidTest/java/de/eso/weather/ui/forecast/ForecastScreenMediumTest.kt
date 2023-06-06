@@ -28,7 +28,6 @@ class ForecastScreenMediumTest: KoinTest {
             Single.just(WeatherTO(GOOD_WEATHER, ERLANGEN))
     }
 
-//    private val scope = getKoin().createScope(getScopeId(), TypeQualifier(WeatherActivity::class))
     private val forecastViewModel: ForecastViewModel by inject()
 
     @get:Rule
@@ -62,16 +61,6 @@ class ForecastScreenMediumTest: KoinTest {
         // THEN
         weatherScreenPage
             .weatherIsVisible(GOOD_WEATHER)
-    }
-
-    @Test
-    fun should_show_the_dummy_snackbar_button() {
-        // GIVEN
-        showScreen()
-
-        // THEN
-        weatherScreenPage
-            .dummySnackbarButtonIsVisible()
     }
 
     private fun showScreen() {

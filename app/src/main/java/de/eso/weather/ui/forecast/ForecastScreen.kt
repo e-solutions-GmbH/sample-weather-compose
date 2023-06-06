@@ -18,14 +18,9 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationCity
-import androidx.compose.material.icons.filled.LocationOff
-import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
@@ -48,9 +43,7 @@ import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
 import de.eso.weather.ui.shared.compose.components.Tile
-import kotlinx.coroutines.launch
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -70,18 +63,6 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
         },
         isLargeScreen = WeatherTheme.isLargeScreen()
     )
-
-    val showDummySnackbarCommand by viewModel.showDummySnackbar.observeAsState()
-
-    val coroutineScope = rememberCoroutineScope()
-    if (showDummySnackbarCommand?.hasBeenHandled == false) {
-        showDummySnackbarCommand?.hasBeenHandled = true
-        val snackbarMessage = stringResource(R.string.dummy_snackbar_text)
-
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(snackbarMessage)
-        }
-    }
 }
 
 @Composable

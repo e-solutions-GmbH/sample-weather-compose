@@ -1,6 +1,5 @@
 package de.eso.weather.ui
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -47,6 +46,8 @@ import de.eso.weather.ui.forecast.ForecastScreen
 import de.eso.weather.ui.forecast.ForecastViewModel
 import de.eso.weather.ui.location.favorites.FavoriteLocationsScreen
 import de.eso.weather.ui.location.favorites.FavoriteLocationsViewModel
+import de.eso.weather.ui.location.search.LocationSearchScreen
+import de.eso.weather.ui.location.search.LocationSearchViewModel
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.routing.api.Routes.ALERT_LOCATION_ID
 import de.eso.weather.ui.shared.compose.ColorPalette
@@ -55,8 +56,6 @@ import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
-import de.eso.weather.ui.shared.location.LocationResult
-import de.eso.weather.ui.shared.location.LocationSearchApi
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -65,6 +64,8 @@ class WeatherActivity : AppCompatActivity() {
 
     private val forecastViewModel: ForecastViewModel by viewModel()
     private val favoriteLocationsViewModel: FavoriteLocationsViewModel by viewModel()
+    // TODO Move into screen after updating Koin and adding koin-androidx-compose
+    private val locationSearchViewModel: LocationSearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +89,8 @@ class WeatherActivity : AppCompatActivity() {
 
             screenName = when(destination.route) {
                 Routes.ALERT -> "Alerts"
-                Routes.MANAGE_LOCATIONS -> "Manage Locations"
+                Routes.MANAGE_LOCATIONS -> "Favorites"
+                Routes.LOCATION_SEARCH -> "Available Locations"
                 else -> null
             }
         }
@@ -165,17 +167,26 @@ class WeatherActivity : AppCompatActivity() {
     @Composable
     fun NavHost(navController: NavHostController, modifier: Modifier = Modifier) {
         NavHost(navController = navController, startDestination = Routes.FORECAST, modifier = modifier) {
-            composable(Routes.FORECAST) { ForecastScreen(navController, forecastViewModel) }
+            composable(Routes.FORECAST) {
+                ForecastScreen(navController, forecastViewModel)
+            }
             composable(Routes.ALERT) { navBackStackEntry ->
                 val locationId = requireNotNull(navBackStackEntry.arguments?.getString(ALERT_LOCATION_ID))
                 val alertViewModel: AlertViewModel = getViewModel { parametersOf(locationId) }
                 AlertScreen(alertViewModel)
             }
-            composable(Routes.MANAGE_LOCATIONS) {
+            composable(Routes.MANAGE_LOCATIONS) { navBackStackEntry ->
                 FavoriteLocationsScreen(
                     viewModel = favoriteLocationsViewModel,
-                    onShowLocationActivity = ::onShowLocationActivity,
-                    onPopBackStack = { navController.popBackStack() })
+                    navController,
+                    navBackStackEntry
+                )
+            }
+            composable(Routes.LOCATION_SEARCH) {
+                LocationSearchScreen(
+                    navController,
+                    locationSearchViewModel
+                )
             }
         }
     }
@@ -241,36 +252,8 @@ class WeatherActivity : AppCompatActivity() {
         }
     }
 
-    private fun onShowLocationActivity() =
-        startActivityForResult(
-            LocationSearchApi.getLocationActivityIntent(this), REQUEST_CODE_CHOOSE_LOCATION
-        )
-
-    @Deprecated("Deprecated in base class")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            REQUEST_CODE_CHOOSE_LOCATION -> handleChooseLocationResult(resultCode, data)
-        }
-    }
-
-    private fun handleChooseLocationResult(resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_CANCELED) {
-            return
-        }
-
-        data?.getParcelableExtra<LocationResult>(LocationSearchApi.RESULT_KEY_LOCATION)?.let {
-            favoriteLocationsViewModel.onLocationSearchReturned(it.id)
-        }
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return false
-    }
-
-    private companion object {
-        private const val REQUEST_CODE_CHOOSE_LOCATION = 1
     }
 }

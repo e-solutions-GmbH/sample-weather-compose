@@ -11,4 +11,5 @@ object Routes {
     const val MANAGE_LOCATIONS = "manageLocations"
 
     const val LOCATION_SEARCH = "locationSearch"
+    const val LOCATION_SEARCH_RESULT = "locationSearch_result"
 }

@@ -37,7 +37,7 @@ class LocationSearchViewModelTest {
         createViewModel()
 
         // THEN
-        assertThat(locationSearchViewModel.locationsResult.value).containsExactly(AMMERNDORF, ERLANGEN)
+        assertThat(locationSearchViewModel.locations.value).containsExactly(AMMERNDORF, ERLANGEN)
     }
 
     @Test
@@ -46,13 +46,12 @@ class LocationSearchViewModelTest {
         every { locationService.queryLocations(AMMERNDORF.name) } returns just(listOf(AMMERNDORF))
 
         createViewModel()
-        val testObserver = locationSearchViewModel.finishWithResult.test()
 
         // WHEN
         locationSearchViewModel.onLocationSelected(AMMERNDORF)
 
         // THEN
-        testObserver.assertValue { it.peekContent() == AMMERNDORF }
+        assertThat(locationSearchViewModel.finishWithResult.value?.peekContent()).isEqualTo(AMMERNDORF)
     }
 
     private fun createViewModel() {

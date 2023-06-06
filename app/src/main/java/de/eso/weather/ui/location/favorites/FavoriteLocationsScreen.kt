@@ -1,17 +1,8 @@
 package de.eso.weather.ui.location.favorites
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -23,14 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import de.eso.weather.domain.shared.api.Location
-import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.location.shared.LocationGrid
+import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
-import de.eso.weather.ui.shared.compose.components.Tile
 import de.eso.weather.ui.shared.livedatacommand.LiveDataCommand
 
-// TODO Als SideEffect lösen! So ist es bestimmt keine gute Idee!
 @Composable
 fun LiveData<LiveDataCommand>.observeCommandAsState(action: () -> Unit) {
     val commandAsState by observeAsState()
@@ -41,20 +33,33 @@ fun LiveData<LiveDataCommand>.observeCommandAsState(action: () -> Unit) {
 }
 
 @Composable
-fun FavoriteLocationsScreen(viewModel: FavoriteLocationsViewModel, onShowLocationActivity: () -> Unit, onPopBackStack: () -> Unit) {
-    viewModel.showLocationActivity.observeCommandAsState(onShowLocationActivity)
-    viewModel.finishScreen.observeCommandAsState(onPopBackStack)
+fun FavoriteLocationsScreen(
+    viewModel: FavoriteLocationsViewModel,
+    navController: NavController,
+    backStackEntry: NavBackStackEntry
+) {
+    val locationId: String? =
+        backStackEntry.savedStateHandle[Routes.LOCATION_SEARCH_RESULT]
+    if (locationId != null) {
+        backStackEntry.savedStateHandle.remove<String>(Routes.LOCATION_SEARCH_RESULT)
+        viewModel.onLocationSearchReturned(locationId)
+    }
+
+    viewModel.finishScreen.observeCommandAsState {
+        navController.popBackStack()
+    }
 
     val locations by viewModel.locations.subscribeAsState(emptyList())
     FavoriteLocationsScreenContent(
-        locations,
-        viewModel::onLocationSelected,
-        viewModel::onEditLocationsClicked,
-        WeatherTheme.isLargeScreen()
+        locations = locations,
+        onLocationSelected = viewModel::onLocationSelected,
+        onAddLocationClicked = {
+            navController.navigate(Routes.LOCATION_SEARCH)
+        },
+        isLargeScreen = WeatherTheme.isLargeScreen()
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FavoriteLocationsScreenContent(
     locations: List<Location>,
@@ -63,20 +68,7 @@ fun FavoriteLocationsScreenContent(
     isLargeScreen: Boolean = false
 ) {
     Box {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(count = if (isLargeScreen) 3 else 2),
-            verticalArrangement = Arrangement.spacedBy(space = Dimensions.ContainerPadding),
-            horizontalArrangement = Arrangement.spacedBy(space = Dimensions.ContainerPadding),
-            content = {
-                items(items = locations, key = {item: Location -> item.id}) { location ->
-                    FavoriteLocationTile(
-                        locationName = location.name,
-                        onClick = { onLocationSelected(location) }
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxSize()
-        )
+        LocationGrid(isLargeScreen, locations, onLocationSelected)
 
         FloatingActionButton(
             modifier = Modifier.align(alignment = Alignment.BottomEnd),
@@ -91,25 +83,6 @@ fun FavoriteLocationsScreenContent(
     }
 }
 
-@Composable
-fun FavoriteLocationTile(
-    locationName: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Tile(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .height(height = Dimensions.TileSizeSmall)
-            .clickable(onClick = onClick)
-    ) {
-        Text(
-            text = locationName,
-            style = WeatherTheme.typography.body1
-        )
-    }
-}
 
 @Preview(device = Devices.AUTOMOTIVE_1024p)
 @Composable
