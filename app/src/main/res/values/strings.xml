@@ -2,6 +2,7 @@
     <!-- Global -->
     <string name="app_name">Sample Weather Compose</string>
     <!-- Forecast -->
+    <string name="forecast_title">Forecast</string>
     <string name="manage_locations_button">Manage locations</string>
 
     <string name="weather_not_available">Not yet available</string>
@@ -15,6 +16,7 @@
     <string name="weather_alerts_unknown_location">Unknown location</string>
 
     <!-- Favorite Locations -->
+    <string name="favorite_locations_title_short">Locations</string>
     <string name="favorite_locations_title">Favorite Locations</string>
 
     <!-- Location Search -->
