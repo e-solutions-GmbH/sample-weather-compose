@@ -23,4 +23,7 @@
     <string name="location_add_title">Add Location</string>
     <string name="popbackstack">popBackStack</string>
     <string name="navigateup">navigateUp</string>
+
+    <!-- Theme Selection -->
+    <string name="theme_selection_title">Themes</string>
 </resources>

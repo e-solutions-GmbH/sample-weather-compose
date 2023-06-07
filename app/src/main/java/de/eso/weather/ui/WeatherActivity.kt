@@ -3,7 +3,6 @@ package de.eso.weather.ui
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -29,7 +28,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.NavigationRail
 import androidx.compose.material.ProvideTextStyle
@@ -55,10 +53,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,7 +66,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -87,6 +82,7 @@ import de.eso.weather.ui.location.search.LocationSearchScreen
 import de.eso.weather.ui.location.search.LocationSearchViewModel
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.routing.api.Routes.ALERT_LOCATION_ID
+import de.eso.weather.ui.routing.api.ScreenNameFor
 import de.eso.weather.ui.shared.compose.ColorPalette
 import de.eso.weather.ui.shared.compose.ColorPalettes
 import de.eso.weather.ui.shared.compose.Dimensions
@@ -95,6 +91,7 @@ import de.eso.weather.ui.shared.compose.LocalScreenSize
 import de.eso.weather.ui.shared.compose.ScreenSize
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
+import de.eso.weather.ui.themeselection.ThemeSelectionScreen
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -120,7 +117,8 @@ class WeatherActivity : AppCompatActivity() {
         val navController = rememberNavController()
 
         var showBackButton by remember { mutableStateOf(false) }
-        var screenName: String? by remember { mutableStateOf(null) }
+        var currentRoute: String? by remember { mutableStateOf(null) }
+        val currentScreenName = ScreenNameFor(currentRoute)
         var showColorPickerDialog by remember { mutableStateOf(false) }
         var activeColorPalette by remember { mutableStateOf(ColorPalettes.DarkBlue) }
 
@@ -128,13 +126,7 @@ class WeatherActivity : AppCompatActivity() {
             val destinationChangedListener =
                 NavController.OnDestinationChangedListener { controller, destination, _ ->
                     showBackButton = controller.previousBackStackEntry != null
-
-                    screenName = when (destination.route) {
-                        Routes.ALERT -> "Alerts"
-                        Routes.MANAGE_LOCATIONS -> "Favorites"
-                        Routes.LOCATION_SEARCH -> "Available Locations"
-                        else -> null
-                    }
+                    currentRoute = destination.route
                 }
 
             navController.addOnDestinationChangedListener(destinationChangedListener)
@@ -152,7 +144,7 @@ class WeatherActivity : AppCompatActivity() {
                 topBar = {
                     TopAppBar(
                         backgroundColor = WeatherTheme.colorPalette.colors.primary,
-                        title = { Headline(screenName) },
+                        title = { Headline(currentScreenName) },
                         navigationIcon = if (showBackButton) {
                             {
                                 IconButton(onClick = { navController.popBackStack() }) {
@@ -237,7 +229,10 @@ class WeatherActivity : AppCompatActivity() {
                         modifier = Modifier
                             .layoutId("content")
                             .padding(8.dp),
-                        navController = navController
+                        navController = navController,
+                        onColorPaletteSelected = {
+                            activeColorPalette = it
+                        }
                     )
                 }
             }
@@ -308,7 +303,33 @@ class WeatherActivity : AppCompatActivity() {
                 selected = currentBackStackEntry?.destination?.route == Routes.MANAGE_LOCATIONS
                         || currentBackStackEntry?.destination?.route == Routes.LOCATION_SEARCH,
             ) {
-                navController.navigate(Routes.MANAGE_LOCATIONS)
+                if (!navController.popBackStack(Routes.MANAGE_LOCATIONS, inclusive = false)) {
+                    navController.navigate(Routes.MANAGE_LOCATIONS)
+                }
+            }
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            EsoNavigationRailItem(
+                label = {
+                    Text(
+                        stringResource(R.string.theme_selection_title),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                icon = {
+                    Icon(
+                        modifier = Modifier.size(36.dp),
+                        imageVector = Icons.Filled.Brush,
+                        contentDescription = stringResource(R.string.favorite_locations_title_short)
+                    )
+                },
+                selected = currentBackStackEntry?.destination?.route == Routes.THEME_SELECTION
+            ) {
+                if (!navController.popBackStack(Routes.THEME_SELECTION, inclusive = false)) {
+                    navController.navigate(Routes.THEME_SELECTION)
+                }
             }
         }
     }
@@ -408,7 +429,9 @@ class WeatherActivity : AppCompatActivity() {
                 selected = currentBackStackEntry?.destination?.route == Routes.MANAGE_LOCATIONS
                         || currentBackStackEntry?.destination?.route == Routes.LOCATION_SEARCH,
                 onClick = {
-                    navController.navigate(Routes.MANAGE_LOCATIONS)
+                    if (!navController.popBackStack(Routes.MANAGE_LOCATIONS, inclusive = false)) {
+                        navController.navigate(Routes.MANAGE_LOCATIONS)
+                    }
                 },
                 icon = {
                     Icon(
@@ -417,6 +440,28 @@ class WeatherActivity : AppCompatActivity() {
                         contentDescription = stringResource(R.string.favorite_locations_title_short)
                     )
                 },
+            )
+
+            BottomNavigationItem(
+                label = {
+                    Text(
+                        stringResource(R.string.theme_selection_title),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Brush,
+                        contentDescription = stringResource(R.string.favorite_locations_title_short)
+                    )
+                },
+                selected = currentBackStackEntry?.destination?.route == Routes.THEME_SELECTION,
+                onClick = {
+                    if (!navController.popBackStack(Routes.THEME_SELECTION, inclusive = false)) {
+                        navController.navigate(Routes.THEME_SELECTION)
+                    }
+                }
             )
         }
     }
@@ -427,7 +472,11 @@ class WeatherActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun NavHost(modifier: Modifier = Modifier, navController: NavHostController) {
+    fun NavHost(
+        modifier: Modifier = Modifier,
+        navController: NavHostController,
+        onColorPaletteSelected: (ColorPalette) -> Unit
+    ) {
         NavHost(
             navController = navController,
             startDestination = Routes.FORECAST,
@@ -453,6 +502,11 @@ class WeatherActivity : AppCompatActivity() {
                 LocationSearchScreen(
                     navController,
                     locationSearchViewModel
+                )
+            }
+            composable(Routes.THEME_SELECTION) {
+                ThemeSelectionScreen(
+                    onColorPaletteSelected = onColorPaletteSelected
                 )
             }
         }
