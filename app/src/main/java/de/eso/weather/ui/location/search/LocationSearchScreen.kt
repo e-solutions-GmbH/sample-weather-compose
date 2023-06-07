@@ -8,6 +8,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.location.shared.LocationGrid
