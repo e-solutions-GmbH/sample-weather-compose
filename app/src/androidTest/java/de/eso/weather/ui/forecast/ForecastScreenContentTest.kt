@@ -37,7 +37,7 @@ class ForecastScreenContentTest {
                 viewState = ForecastViewState(ERLANGEN, WeatherTO(GOOD_WEATHER, ERLANGEN)),
                 snackbarHostState = SnackbarHostState(),
                 onGoToWeatherAlertsClicked = { },
-                onManageLocationsClicked = { }
+                onAddLocationClicked = { }
             )
         }
     }

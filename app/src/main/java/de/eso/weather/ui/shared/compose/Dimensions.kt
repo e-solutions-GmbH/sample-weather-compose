@@ -78,6 +78,10 @@ data class Dimensions(
         val Automotive: Dimensions = Phone.copy(
             titleBarHeight = 100.dp,
 
+            tileSizeLarge = 500.dp,
+            tileSize = 300.dp,
+            TileSizeSmall = 150.dp,
+
             headerTextSize = 50.sp,
             titleTextSize = 34.sp,
             subTitleTextSize = 30.sp,
