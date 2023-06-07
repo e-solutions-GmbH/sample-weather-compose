@@ -57,7 +57,7 @@ object ColorPalettes {
 @Immutable
 data class ColorPalette(
     val name: String,
-    val color: Color
+    private val color: Color
 ) {
     val colors: Colors
         get() {

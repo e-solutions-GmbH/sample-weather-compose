@@ -232,7 +232,8 @@ class WeatherActivity : AppCompatActivity() {
         NavigationRail(
             modifier = Modifier
                 .width(104.dp)
-                .then(modifier)
+                .then(modifier),
+            backgroundColor = WeatherTheme.colorPalette.colors.secondaryVariant
         ) {
             EsoNavigationRailItem(
                 label = {
@@ -364,7 +365,10 @@ class WeatherActivity : AppCompatActivity() {
     ) {
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
 
-        BottomNavigation(modifier = modifier) {
+        BottomNavigation(
+            modifier = modifier,
+            backgroundColor = WeatherTheme.colorPalette.colors.secondaryVariant
+        ) {
             BottomNavigationItem(
                 selected = currentBackStackEntry?.destination?.route == Routes.FORECAST,
                 onClick = {
