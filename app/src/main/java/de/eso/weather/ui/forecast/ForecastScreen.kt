@@ -10,16 +10,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.Icon
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
@@ -44,11 +46,9 @@ import de.eso.weather.ui.shared.compose.components.Tile
 
 @Composable
 fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     ForecastScreenContent(
         viewModel.forecastViewState,
-        snackbarHostState,
+        viewModel.forecastSavedLocationsViewState,
         onGoToWeatherAlertsClicked = {
             navController.navigate(
                 Routes.toAlerts(
@@ -64,114 +64,136 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
 }
 
 @Composable
-fun ForecastScreenContent(
-    viewState: ForecastViewState,
-    snackbarHostState: SnackbarHostState,
-    onGoToWeatherAlertsClicked: () -> Unit,
-    onManageLocationsClicked: () -> Unit,
-    isLargeScreen: Boolean = false
+fun ForecastForLocationsGrid(
+    modifier: Modifier = Modifier,
+    activeLocationViewState: ForecastViewState,
+    savedLocationsViewState: List<ForecastViewState>,
+    onGoToWeatherAlertsClicked: () -> Unit
 ) {
     val locationHeadlineText =
-        if (viewState.activeLocation == null) {
+        if (activeLocationViewState.activeLocation == null) {
             stringResource(R.string.no_location_selected)
         } else {
-            viewState.activeLocation.name
+            activeLocationViewState.activeLocation.name
         }
 
-    val weatherSummary = viewState.weather?.weather
-    val activeLocationName = viewState.activeLocation?.name
+    val weatherSummary = activeLocationViewState.weather?.weather
+    val activeLocationName = activeLocationViewState.activeLocation?.name
 
-    BoxWithConstraints {
-        val constraints = ConstraintSet {
-            val horizontalSplit = createGuidelineFromStart(0.6f)
-
-            val activeLocationForecastRef = createRefFor("activeLocationForecast")
-            val configurationPanelRef = createRefFor("configurationPanel")
-            val esoLogoRef = createRefFor("esoLogo")
-            val snackbarRef = createRefFor("snackbar")
-
-            if (isLargeScreen) {
-                constrain(activeLocationForecastRef) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(horizontalSplit)
-                    bottom.linkTo(parent.bottom)
-
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
-
-                constrain(configurationPanelRef) {
-                    top.linkTo(parent.top)
-                    start.linkTo(horizontalSplit)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(esoLogoRef.top)
-
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
-            } else {
-                constrain(activeLocationForecastRef) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(configurationPanelRef.top)
-
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
-
-                constrain(configurationPanelRef) {
-                    top.linkTo(activeLocationForecastRef.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(esoLogoRef.top)
-
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
-            }
-
-            constrain(esoLogoRef) {
-                top.linkTo(configurationPanelRef.bottom)
-                end.linkTo(parent.end)
-                start.linkTo(configurationPanelRef.start)
-                bottom.linkTo(parent.bottom)
-            }
-
-            constrain(snackbarRef) {
-                bottom.linkTo(parent.bottom)
-            }
-        }
-
-        ConstraintLayout(constraintSet = constraints, modifier = Modifier.fillMaxSize()) {
+    LazyHorizontalStaggeredGrid(
+        modifier = modifier,
+        rows = StaggeredGridCells.Fixed(3),
+        verticalArrangement = Arrangement.spacedBy(WeatherTheme.dimensions.containerPadding),
+        horizontalItemSpacing = WeatherTheme.dimensions.containerPadding
+    ) {
+        item(span = StaggeredGridItemSpan.FullLine) {
             ForecastScreenActiveLocationForecast(
                 locationHeadlineText = locationHeadlineText,
                 weatherSummary = weatherSummary,
                 activeLocationName = activeLocationName,
                 onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
                 modifier = Modifier
-                    .layoutId("activeLocationForecast")
-                    .padding(
-                        end = if (isLargeScreen) WeatherTheme.dimensions.containerPadding else 0.dp,
-                        bottom = if (isLargeScreen) 0.dp else WeatherTheme.dimensions.containerPadding
-                    )
+                    .width(width = 500.dp)
+                    .fillMaxHeight()
             )
+        }
 
-            ForecastScreenConfigurationPanel(
-                onManageLocationsClicked = onManageLocationsClicked,
-                modifier = Modifier.layoutId("configurationPanel")
+        items(savedLocationsViewState) {
+            ForecastSavedLocationForecast(
+                locationName = it.activeLocation?.name ?: "",
+                weatherSummary = it.weather?.weather ?: ""
             )
+        }
+    }
+}
 
+@Composable
+fun ForecastSavedLocationForecast(
+    modifier: Modifier = Modifier,
+    locationName: String,
+    weatherSummary: String
+) {
+    val weatherIcon = when (weatherSummary) {
+        "Sunshine" -> R.drawable.ic_forecast_sun
+        "Cloudy" -> R.drawable.ic_forecast_cloudy
+        "Rain" -> R.drawable.ic_forecast_rain
+        "Snow" -> R.drawable.ic_forecast_snow
+        "Thunderstorm" -> R.drawable.ic_forecast_thunderstorm
+        else -> R.drawable.ic_forecast_sun
+    }
+
+    Tile(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier.width(width = 300.dp)
+    ) {
+        Text(
+            text = locationName,
+            style = WeatherTheme.typography.h6,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = WeatherTheme.dimensions.titlePadding)
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                painter = painterResource(id = weatherIcon),
+                contentDescription = "",
+                tint = EsoColors.Orange,
+                modifier = Modifier
+                    .size(size = 80.dp)
+                    .padding(end = WeatherTheme.dimensions.iconPadding)
+            )
+            Text(text = weatherSummary)
+        }
+    }
+}
+
+@Composable
+fun ForecastScreenContent(
+    viewState: ForecastViewState,
+    savedLocationsViewState: List<ForecastViewState>,
+    onGoToWeatherAlertsClicked: () -> Unit,
+    onManageLocationsClicked: () -> Unit,
+    isLargeScreen: Boolean = false
+) {
+    BoxWithConstraints {
+        val constraints = ConstraintSet {
+            val locationForecastRef = createRefFor("locationForecast")
+            val esoLogoRef = createRefFor("esoLogo")
+
+            constrain(locationForecastRef) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            }
+
+            constrain(esoLogoRef) {
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+
+                width = Dimension.wrapContent
+            }
+        }
+
+        ConstraintLayout(constraintSet = constraints, modifier = Modifier.fillMaxSize()) {
             ForecastScreenEsoLogo(
                 modifier = Modifier
                     .layoutId("esoLogo")
                     .height(if (isLargeScreen) WeatherTheme.dimensions.iconSizeBigLogo else WeatherTheme.dimensions.iconSizeLogo)
+                    .width(width = 400.dp)
             )
 
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.layoutId("snackbar")
+            ForecastForLocationsGrid(
+                activeLocationViewState = viewState,
+                savedLocationsViewState = savedLocationsViewState,
+                onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
+                modifier = Modifier.layoutId("locationForecast")
             )
         }
     }
@@ -284,10 +306,27 @@ fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
         activeLocation = activeLocation,
         weather = WeatherTO("Snow", activeLocation)
     )
-    val snackbarHostState = remember { SnackbarHostState() }
+
+    val savedLocations = listOf(
+        Location(name = "Nürnberg"),
+        Location(name = "Fürth"),
+        Location(name = "Heroldsberg"),
+        Location(name = "Tennenlohe"),
+    )
 
     WeatherTheme {
         GridBackground()
-        ForecastScreenContent(viewState, snackbarHostState, {}, {}, isLargeScreen)
+        ForecastScreenContent(
+            viewState,
+            savedLocations.map { location ->
+                ForecastViewState(
+                    activeLocation = location,
+                    weather = WeatherTO(weather = "Sunshine", location = location)
+                )
+            },
+            {},
+            {},
+            isLargeScreen
+        )
     }
 }

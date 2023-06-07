@@ -15,6 +15,7 @@ data class Dimensions(
     val decoratorSize: Dp,
 
     // Padding
+    val titlePadding: Dp,
     val contentPadding: Dp,
     val containerPadding: Dp,
     val iconPadding: Dp,
@@ -53,6 +54,7 @@ data class Dimensions(
             decoratorSize = 300.dp,
 
             // Padding
+            titlePadding = 10.dp,
             contentPadding = 16.dp,
             containerPadding = 20.dp,
             iconPadding = 20.dp,
@@ -70,19 +72,19 @@ data class Dimensions(
             body1TextSize = 20.sp,
             body2TextSize = 18.sp,
             buttonTextSize = 20.sp,
-            captionTextSize = 18.sp,
-
-            headerTextSizeLarge = 50.sp,
-            titleTextSizeLarge = 40.sp,
-            subTitleTextSizeLarge = 34.sp,
-            body1TextSizeLarge = 28.sp,
-            body2TextSizeLarge = 26.sp,
-            buttonTextSizeLarge = 28.sp,
-            captionTextSizeLarge = 26.sp
+            captionTextSize = 18.sp
         )
 
         val Automotive: Dimensions = Phone.copy(
-            titleBarHeight = 100.dp
+            titleBarHeight = 100.dp,
+
+            headerTextSize = 50.sp,
+            titleTextSize = 34.sp,
+            subTitleTextSize = 30.sp,
+            body1TextSize = 28.sp,
+            body2TextSize = 26.sp,
+            buttonTextSize = 28.sp,
+            captionTextSize = 26.sp
         )
     }
 }
