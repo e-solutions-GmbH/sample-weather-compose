@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.WeatherTheme
 
 @Composable
@@ -36,7 +35,7 @@ fun Tile(
                     Pair(1f, backgroundColor)
                 )
             )
-            .padding(all = Dimensions.ContainerPadding),
+            .padding(all = WeatherTheme.dimensions.containerPadding),
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         content = content

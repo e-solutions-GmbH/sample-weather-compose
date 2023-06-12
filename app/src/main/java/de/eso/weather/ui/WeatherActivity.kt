@@ -6,11 +6,9 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,21 +16,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.NavigationRail
 import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -61,8 +54,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -86,7 +77,6 @@ import de.eso.weather.ui.routing.api.Routes.ALERT_LOCATION_ID
 import de.eso.weather.ui.routing.api.ScreenNameFor
 import de.eso.weather.ui.shared.compose.ColorPalette
 import de.eso.weather.ui.shared.compose.ColorPalettes
-import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.LocalScreenSize
 import de.eso.weather.ui.shared.compose.ScreenSize
@@ -120,7 +110,6 @@ class WeatherActivity : AppCompatActivity() {
         var showBackButton by remember { mutableStateOf(false) }
         var currentRoute: String? by remember { mutableStateOf(null) }
         val currentScreenName = ScreenNameFor(currentRoute)
-        var showColorPickerDialog by remember { mutableStateOf(false) }
         var activeColorPalette by remember { mutableStateOf(ColorPalettes.DarkBlue) }
 
         DisposableEffect(true) {
@@ -159,18 +148,7 @@ class WeatherActivity : AppCompatActivity() {
                         } else {
                             null
                         },
-                        actions = {
-                            Button(
-                                onClick = { showColorPickerDialog = true }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Brush,
-                                    tint = EsoColors.Orange,
-                                    contentDescription = "Select color palette"
-                                )
-                            }
-                        },
-                        modifier = Modifier.height(height = Dimensions.TitleBarHeight)
+                        modifier = Modifier.height(height = WeatherTheme.dimensions.titleBarHeight)
                     )
                 },
                 bottomBar = {
@@ -239,16 +217,6 @@ class WeatherActivity : AppCompatActivity() {
                             activeColorPalette = it
                         }
                     )
-                }
-            }
-
-            if (showColorPickerDialog) {
-                ColorPickerDialog(
-                    onDialogDismissed = { showColorPickerDialog = false },
-                    colorPalettes = ColorPalettes.all,
-                    selectedColorPalette = activeColorPalette
-                ) { selectedColorPalette ->
-                    activeColorPalette = selectedColorPalette
                 }
             }
         }
@@ -513,67 +481,6 @@ class WeatherActivity : AppCompatActivity() {
                 ThemeSelectionScreen(
                     onColorPaletteSelected = onColorPaletteSelected
                 )
-            }
-        }
-    }
-
-    @Composable
-    fun ColorPickerDialog(
-        onDialogDismissed: () -> Unit,
-        colorPalettes: List<ColorPalette>,
-        selectedColorPalette: ColorPalette,
-        onColorPaletteSelected: (ColorPalette) -> Unit
-    ) {
-        Dialog(
-            onDismissRequest = onDialogDismissed,
-            properties = DialogProperties()
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(color = WeatherTheme.colorPalette.colors.secondary)
-                    .padding(all = Dimensions.ContainerPadding)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(height = Dimensions.TitleBarHeight)
-                ) {
-                    Text(
-                        text = "Choose color palette",
-                        style = WeatherTheme.typography.h6
-                    )
-                }
-
-                LazyColumn {
-                    items(items = colorPalettes, key = { it.name }) { colorPalette ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = Dimensions.ContainerPadding / 2)
-                                .clickable {
-                                    onColorPaletteSelected(colorPalette)
-                                    onDialogDismissed()
-                                }
-                        ) {
-                            RadioButton(
-                                selected = selectedColorPalette == colorPalette,
-                                onClick = null,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = WeatherTheme.colorPalette.colors.onSecondary
-                                ),
-                                modifier = Modifier
-                                    .padding(end = Dimensions.ContentPadding)
-                            )
-
-                            Text(
-                                text = colorPalette.name,
-                                style = WeatherTheme.typography.body2,
-                                color = WeatherTheme.colorPalette.colors.onSecondary
-                            )
-                        }
-                    }
-                }
             }
         }
     }

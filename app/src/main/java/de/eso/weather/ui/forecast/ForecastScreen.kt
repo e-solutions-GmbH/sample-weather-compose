@@ -1,6 +1,5 @@
 package de.eso.weather.ui.forecast
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -37,7 +36,6 @@ import de.eso.weather.R
 import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.routing.api.Routes
-import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
@@ -155,8 +153,8 @@ fun ForecastScreenContent(
                 modifier = Modifier
                     .layoutId("activeLocationForecast")
                     .padding(
-                        end = if (isLargeScreen) Dimensions.ContainerPadding else 0.dp,
-                        bottom = if (isLargeScreen) 0.dp else Dimensions.ContainerPadding
+                        end = if (isLargeScreen) WeatherTheme.dimensions.containerPadding else 0.dp,
+                        bottom = if (isLargeScreen) 0.dp else WeatherTheme.dimensions.containerPadding
                     )
             )
 
@@ -168,7 +166,7 @@ fun ForecastScreenContent(
             ForecastScreenEsoLogo(
                 modifier = Modifier
                     .layoutId("esoLogo")
-                    .height(if (isLargeScreen) Dimensions.IconSizeBigLogo else Dimensions.IconSizeLogo)
+                    .height(if (isLargeScreen) WeatherTheme.dimensions.iconSizeBigLogo else WeatherTheme.dimensions.iconSizeLogo)
             )
 
             SnackbarHost(
@@ -215,8 +213,8 @@ fun ForecastScreenActiveLocationForecast(
                     modifier = Modifier
                         .weight(weight = 2f)
                         .fillMaxHeight()
-                        .width(width = Dimensions.DecoratorSize)
-                        .padding(bottom = Dimensions.IconPadding)
+                        .width(width = WeatherTheme.dimensions.decoratorSize)
+                        .padding(bottom = WeatherTheme.dimensions.iconPadding)
                 )
             }
         }
@@ -250,7 +248,7 @@ fun ForecastScreenConfigurationPanel(
             imageVector = Icons.Filled.LocationCity,
             text = stringResource(R.string.manage_locations_button),
             contentDescription = stringResource(R.string.manage_locations_button),
-            modifier = Modifier.padding(bottom = Dimensions.ButtonPadding),
+            modifier = Modifier.padding(bottom = WeatherTheme.dimensions.buttonPadding),
             textFillsSpace = true
         )
     }

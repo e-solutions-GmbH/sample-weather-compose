@@ -31,6 +31,11 @@ object WeatherTheme {
         @Composable
         get() = MaterialTheme.shapes
 
+    val dimensions: Dimensions
+        @Composable
+        get() = LocalDimensions.current
+
+    @Composable
     fun createTypography(isLargeScreen: Boolean = false): Typography {
         val defaultFontFamily = FontFamily(Font(R.font.calibri))
         val headlineFontFamily = FontFamily(Font(R.font.cambria))
@@ -44,23 +49,23 @@ object WeatherTheme {
         // Choose fitting typography depending on screen size (e.g. larger for Automotive resolutions)
         val displaySizeAdaptedTypography = if (isLargeScreen) {
             commonTypography.copy(
-                h4 = commonTypography.h4.copy(fontSize = Dimensions.HeaderTextSizeLarge),
-                h6 = commonTypography.h6.copy(fontSize = Dimensions.TitleTextSizeLarge),
-                subtitle1 = commonTypography.subtitle1.copy(fontSize = Dimensions.SubTitleTextSizeLarge),
-                body1 = commonTypography.body1.copy(fontSize = Dimensions.Body1TextSizeLarge),
-                body2 = commonTypography.body2.copy(fontSize = Dimensions.Body2TextSizeLarge),
-                button = commonTypography.button.copy(fontSize = Dimensions.ButtonTextSizeLarge),
-                caption = commonTypography.caption.copy(fontSize = Dimensions.CaptionTextSizeLarge)
+                h4 = commonTypography.h4.copy(fontSize = dimensions.headerTextSizeLarge),
+                h6 = commonTypography.h6.copy(fontSize = dimensions.titleTextSizeLarge),
+                subtitle1 = commonTypography.subtitle1.copy(fontSize = dimensions.subTitleTextSizeLarge),
+                body1 = commonTypography.body1.copy(fontSize = dimensions.body1TextSizeLarge),
+                body2 = commonTypography.body2.copy(fontSize = dimensions.body2TextSizeLarge),
+                button = commonTypography.button.copy(fontSize = dimensions.buttonTextSizeLarge),
+                caption = commonTypography.caption.copy(fontSize = dimensions.captionTextSizeLarge)
             )
         } else {
             commonTypography.copy(
-                h4 = commonTypography.h4.copy(fontSize = Dimensions.HeaderTextSize),
-                h6 = commonTypography.h6.copy(fontSize = Dimensions.TitleTextSize),
-                subtitle1 = commonTypography.subtitle1.copy(fontSize = Dimensions.SubTitleTextSize),
-                body1 = commonTypography.body1.copy(fontSize = Dimensions.Body1TextSize),
-                body2 = commonTypography.body2.copy(fontSize = Dimensions.Body2TextSize),
-                button = commonTypography.button.copy(fontSize = Dimensions.ButtonTextSize),
-                caption = commonTypography.caption.copy(fontSize = Dimensions.CaptionTextSize)
+                h4 = commonTypography.h4.copy(fontSize = dimensions.headerTextSize),
+                h6 = commonTypography.h6.copy(fontSize = dimensions.titleTextSize),
+                subtitle1 = commonTypography.subtitle1.copy(fontSize = dimensions.subTitleTextSize),
+                body1 = commonTypography.body1.copy(fontSize = dimensions.body1TextSize),
+                body2 = commonTypography.body2.copy(fontSize = dimensions.body2TextSize),
+                button = commonTypography.button.copy(fontSize = dimensions.buttonTextSize),
+                caption = commonTypography.caption.copy(fontSize = dimensions.captionTextSize)
             )
         }
 
@@ -79,6 +84,8 @@ val LocalScreenSize = staticCompositionLocalOf {
 
 val LocalColorPalette = compositionLocalOf { ColorPalettes.DarkBlue }
 
+val LocalDimensions = staticCompositionLocalOf { Dimensions.Phone }
+
 @Composable
 fun WeatherTheme(
     isLargeScreen: Boolean = false,
@@ -89,9 +96,16 @@ fun WeatherTheme(
         isLargeScreen = LocalConfiguration.current.isLayoutSizeAtLeast(SCREENLAYOUT_SIZE_LARGE)
     )
 
+    val screenSizeDependentDimensions = if (isLargeScreen) {
+        Dimensions.Automotive
+    } else {
+        Dimensions.Phone
+    }
+
     CompositionLocalProvider(
         LocalScreenSize provides screenSize,
-        LocalColorPalette provides colorPalette
+        LocalColorPalette provides colorPalette,
+        LocalDimensions provides screenSizeDependentDimensions
     ) {
         MaterialTheme(
             content = content,

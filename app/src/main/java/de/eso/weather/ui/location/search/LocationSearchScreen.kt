@@ -8,12 +8,11 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.location.shared.LocationGrid
 import de.eso.weather.ui.routing.api.Routes
-import de.eso.weather.ui.shared.compose.Dimensions
+import de.eso.weather.ui.shared.compose.WeatherTheme
 
 @Composable
 fun LocationSearchScreen(
@@ -57,7 +56,7 @@ fun LocationSearchScreenContent(
             onValueChange = onQueryChanged,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Dimensions.ContainerPadding)
+                .padding(bottom = WeatherTheme.dimensions.containerPadding)
         )
 
         LocationGrid(
