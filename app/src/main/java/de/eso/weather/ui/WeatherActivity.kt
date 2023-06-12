@@ -74,7 +74,7 @@ import de.eso.weather.ui.location.search.LocationSearchScreen
 import de.eso.weather.ui.location.search.LocationSearchViewModel
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.routing.api.Routes.ALERT_LOCATION_ID
-import de.eso.weather.ui.routing.api.ScreenNameFor
+import de.eso.weather.ui.routing.api.screenNameFor
 import de.eso.weather.ui.shared.compose.ColorPalette
 import de.eso.weather.ui.shared.compose.ColorPalettes
 import de.eso.weather.ui.shared.compose.EsoColors
@@ -109,7 +109,7 @@ class WeatherActivity : AppCompatActivity() {
 
         var showBackButton by remember { mutableStateOf(false) }
         var currentRoute: String? by remember { mutableStateOf(null) }
-        val currentScreenName = ScreenNameFor(currentRoute)
+        val currentScreenName = screenNameFor(currentRoute)
         var activeColorPalette by remember { mutableStateOf(ColorPalettes.DarkBlue) }
 
         DisposableEffect(true) {
@@ -468,11 +468,10 @@ class WeatherActivity : AppCompatActivity() {
                 val alertViewModel: AlertViewModel = getViewModel { parametersOf(locationId) }
                 AlertScreen(alertViewModel)
             }
-            composable(Routes.MANAGE_LOCATIONS) { navBackStackEntry ->
+            composable(Routes.MANAGE_LOCATIONS) {
                 FavoriteLocationsScreen(
                     viewModel = favoriteLocationsViewModel,
-                    navController,
-                    navBackStackEntry
+                    navController
                 )
             }
             composable(Routes.LOCATION_SEARCH) {

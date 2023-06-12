@@ -11,7 +11,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 
 class FavoriteLocationsViewModel(
-    private val locationService: LocationService,
     private val favoriteLocationsRepository: FavoriteLocationsRepository
 ) : ViewModel() {
 
@@ -23,12 +22,6 @@ class FavoriteLocationsViewModel(
     fun onLocationSelected(location: Location) {
         favoriteLocationsRepository.setActive(location)
         finishScreen.send()
-    }
-
-    fun onLocationSearchReturned(id: String) {
-        locationService.getLocation(id).subscribe {
-            favoriteLocationsRepository.saveLocation(it)
-        }.addTo(disposables)
     }
 
     override fun onCleared() {

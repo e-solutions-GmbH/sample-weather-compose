@@ -11,11 +11,12 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
+import java.util.Optional
 
 
 class ForecastViewModel(
     private val weatherForecastService: WeatherForecastService,
-    private val favoriteLocationsRepository: FavoriteLocationsRepository,
+    favoriteLocationsRepository: FavoriteLocationsRepository,
     mainScheduler: Scheduler = AndroidSchedulers.mainThread()
 ) : ViewModel() {
     var forecastViewState by mutableStateOf(ForecastViewState())
@@ -45,13 +46,21 @@ class ForecastViewModel(
             }
             .addTo(disposables)
 
-        favoriteLocationsRepository
-            .savedLocations
+        Observable.combineLatest(
+            favoriteLocationsRepository.activeLocation.startWith(Observable.just(Optional.empty())),
+            favoriteLocationsRepository.savedLocations
+        ) { activeLocation, savedLocations ->
+            if (activeLocation.isPresent) {
+                savedLocations - activeLocation.get()
+            } else {
+                savedLocations
+            }
+        }
             .switchMap { locations ->
-                val weatherForLocations = locations.map {
-                    location -> weatherForecastService
-                    .getWeather(location)
-                    .map { weatherTO -> ForecastViewState(location, weatherTO) }
+                val weatherForLocations = locations.map { location ->
+                    weatherForecastService
+                        .getWeather(location)
+                        .map { weatherTO -> ForecastViewState(location, weatherTO) }
                 }.toTypedArray()
 
                 Observable.combineLatestArray(weatherForLocations) {

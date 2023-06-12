@@ -16,14 +16,13 @@ object Routes {
     const val MANAGE_LOCATIONS = "manageLocations"
 
     const val LOCATION_SEARCH = "locationSearch"
-    const val LOCATION_SEARCH_RESULT = "locationSearch_result"
 
     const val THEME_SELECTION = "themeSelection"
 }
 
 @Composable
 @ReadOnlyComposable
-fun ScreenNameFor(route: String?): String {
+fun screenNameFor(route: String?): String {
     return when (route) {
         Routes.FORECAST -> stringResource(id = R.string.forecast_title)
         Routes.ALERT -> stringResource(id = R.string.weather_alerts_title)

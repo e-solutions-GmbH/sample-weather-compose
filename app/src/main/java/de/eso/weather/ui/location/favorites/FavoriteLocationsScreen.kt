@@ -35,16 +35,8 @@ fun LiveData<LiveDataCommand>.observeCommandAsState(action: () -> Unit) {
 @Composable
 fun FavoriteLocationsScreen(
     viewModel: FavoriteLocationsViewModel,
-    navController: NavController,
-    backStackEntry: NavBackStackEntry
+    navController: NavController
 ) {
-    val locationId: String? =
-        backStackEntry.savedStateHandle[Routes.LOCATION_SEARCH_RESULT]
-    if (locationId != null) {
-        backStackEntry.savedStateHandle.remove<String>(Routes.LOCATION_SEARCH_RESULT)
-        viewModel.onLocationSearchReturned(locationId)
-    }
-
     viewModel.finishScreen.observeCommandAsState {
         navController.popBackStack()
     }

@@ -5,7 +5,6 @@ import de.eso.weather.Locations.AMMERNDORF
 import de.eso.weather.Locations.ERLANGEN
 import de.eso.weather.Locations.ZIRNDORF
 import de.eso.weather.domain.location.api.LocationService
-import de.eso.weather.test
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -51,7 +50,7 @@ class LocationSearchViewModelTest {
         locationSearchViewModel.onLocationSelected(AMMERNDORF)
 
         // THEN
-        assertThat(locationSearchViewModel.finishWithResult.value?.peekContent()).isEqualTo(AMMERNDORF)
+        assertThat(locationSearchViewModel.finishScreen.value?.peekContent()).isEqualTo(AMMERNDORF)
     }
 
     private fun createViewModel() {

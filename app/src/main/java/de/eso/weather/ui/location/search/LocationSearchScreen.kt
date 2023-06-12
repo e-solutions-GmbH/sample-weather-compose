@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.location.shared.LocationGrid
-import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.WeatherTheme
 
 @Composable
@@ -19,14 +18,11 @@ fun LocationSearchScreen(
     navController: NavController,
     locationSearchViewModel: LocationSearchViewModel
 ) {
-    val finishWithResult by locationSearchViewModel.finishWithResult
-    finishWithResult?.let { event ->
-        event.getContentIfNotHandled()?.let { location ->
-            navController.previousBackStackEntry?.savedStateHandle?.set(
-                Routes.LOCATION_SEARCH_RESULT,
-                location.id
-            )
+    val finishWithResult by locationSearchViewModel.finishScreen
+    finishWithResult?.let { command ->
+        if (!command.hasBeenHandled) {
             navController.popBackStack()
+            command.hasBeenHandled = true
         }
     }
 
