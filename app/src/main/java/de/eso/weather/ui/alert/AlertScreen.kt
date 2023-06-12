@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import de.eso.weather.R
 import de.eso.weather.domain.alert.api.WeatherAlertTO
 import de.eso.weather.domain.shared.api.Location
-import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.Tile
@@ -100,7 +99,7 @@ fun Alerts(
                 items(alerts) {
                     AlertTile(
                         alertListItem = it,
-                        modifier = Modifier.size(Dimensions.TileSizeLarge)
+                        modifier = Modifier.size(WeatherTheme.dimensions.tileSizeLarge)
                     )
                 }
             }
@@ -109,15 +108,15 @@ fun Alerts(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .padding(top = Dimensions.ContainerPadding),
+                .padding(top = WeatherTheme.dimensions.containerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = {
                 items(alerts) {
                     AlertTile(
                         alertListItem = it,
                         modifier = Modifier
-                            .size(Dimensions.TileSize)
-                            .padding(bottom = Dimensions.ContainerPadding)
+                            .size(WeatherTheme.dimensions.tileSize)
+                            .padding(bottom = WeatherTheme.dimensions.containerPadding)
                     )
                 }
             }
@@ -150,7 +149,7 @@ fun AlertTile(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(bottom = Dimensions.IconPadding)
+                    .padding(bottom = WeatherTheme.dimensions.iconPadding)
             )
         }
         Text(

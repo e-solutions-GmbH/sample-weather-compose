@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import de.eso.weather.domain.shared.api.Location
-import de.eso.weather.ui.shared.compose.Dimensions
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.Tile
 
@@ -24,8 +23,8 @@ fun LocationGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(count = if (isLargeScreen) 3 else 2),
-        verticalArrangement = Arrangement.spacedBy(space = Dimensions.ContainerPadding),
-        horizontalArrangement = Arrangement.spacedBy(space = Dimensions.ContainerPadding),
+        verticalArrangement = Arrangement.spacedBy(space = WeatherTheme.dimensions.containerPadding),
+        horizontalArrangement = Arrangement.spacedBy(space = WeatherTheme.dimensions.containerPadding),
         content = {
             items(items = locations, key = { item: Location -> item.id }) { location ->
                 LocationTile(
@@ -48,7 +47,7 @@ fun LocationTile(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .height(height = Dimensions.TileSizeSmall)
+            .height(height = WeatherTheme.dimensions.TileSizeSmall)
             .clickable(onClick = onClick)
     ) {
         Text(
