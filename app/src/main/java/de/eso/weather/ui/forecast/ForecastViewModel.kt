@@ -19,6 +19,7 @@ class ForecastViewModel(
     mainScheduler: Scheduler = AndroidSchedulers.mainThread()
 ) : ViewModel() {
     var forecastViewState by mutableStateOf(ForecastViewState())
+    var forecastSavedLocationsViewState by mutableStateOf<List<ForecastViewState>>(emptyList())
 
     private val disposables = CompositeDisposable()
 
@@ -41,6 +42,25 @@ class ForecastViewModel(
             .observeOn(mainScheduler)
             .subscribe {
                 forecastViewState = it
+            }
+            .addTo(disposables)
+
+        favoriteLocationsRepository
+            .savedLocations
+            .switchMap { locations ->
+                val weatherForLocations = locations.map {
+                    location -> weatherForecastService
+                    .getWeather(location)
+                    .map { weatherTO -> ForecastViewState(location, weatherTO) }
+                }.toTypedArray()
+
+                Observable.combineLatestArray(weatherForLocations) {
+                    it.toList() as List<ForecastViewState>
+                }
+            }
+            .observeOn(mainScheduler)
+            .subscribe {
+                forecastSavedLocationsViewState = it
             }
             .addTo(disposables)
     }

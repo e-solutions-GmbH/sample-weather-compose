@@ -99,7 +99,7 @@ fun Alerts(
                 items(alerts) {
                     AlertTile(
                         alertListItem = it,
-                        modifier = Modifier.size(WeatherTheme.dimensions.tileSizeLarge)
+                        modifier = Modifier.size(WeatherTheme.dimensions.tileSize)
                     )
                 }
             }
@@ -115,7 +115,7 @@ fun Alerts(
                     AlertTile(
                         alertListItem = it,
                         modifier = Modifier
-                            .size(WeatherTheme.dimensions.tileSize)
+                            .size(WeatherTheme.dimensions.tileSizeSmall)
                             .padding(bottom = WeatherTheme.dimensions.containerPadding)
                     )
                 }

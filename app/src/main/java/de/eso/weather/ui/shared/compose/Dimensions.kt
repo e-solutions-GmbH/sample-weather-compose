@@ -10,11 +10,12 @@ data class Dimensions(
 
     val tileSizeLarge: Dp,
     val tileSize: Dp,
-    val TileSizeSmall: Dp,
+    val tileSizeSmall: Dp,
 
     val decoratorSize: Dp,
 
     // Padding
+    val titlePadding: Dp,
     val contentPadding: Dp,
     val containerPadding: Dp,
     val iconPadding: Dp,
@@ -32,15 +33,7 @@ data class Dimensions(
     val body1TextSize: TextUnit,
     val body2TextSize: TextUnit,
     val buttonTextSize: TextUnit,
-    val captionTextSize: TextUnit,
-
-    val headerTextSizeLarge: TextUnit,
-    val titleTextSizeLarge: TextUnit,
-    val subTitleTextSizeLarge: TextUnit,
-    val body1TextSizeLarge: TextUnit,
-    val body2TextSizeLarge: TextUnit,
-    val buttonTextSizeLarge: TextUnit,
-    val captionTextSizeLarge: TextUnit
+    val captionTextSize: TextUnit
 ) {
     companion object {
         val Phone = Dimensions(
@@ -48,11 +41,12 @@ data class Dimensions(
 
             tileSizeLarge = 300.dp,
             tileSize = 200.dp,
-            TileSizeSmall = 150.dp,
+            tileSizeSmall = 150.dp,
 
             decoratorSize = 300.dp,
 
             // Padding
+            titlePadding = 10.dp,
             contentPadding = 16.dp,
             containerPadding = 20.dp,
             iconPadding = 20.dp,
@@ -70,19 +64,23 @@ data class Dimensions(
             body1TextSize = 20.sp,
             body2TextSize = 18.sp,
             buttonTextSize = 20.sp,
-            captionTextSize = 18.sp,
-
-            headerTextSizeLarge = 50.sp,
-            titleTextSizeLarge = 40.sp,
-            subTitleTextSizeLarge = 34.sp,
-            body1TextSizeLarge = 28.sp,
-            body2TextSizeLarge = 26.sp,
-            buttonTextSizeLarge = 28.sp,
-            captionTextSizeLarge = 26.sp
+            captionTextSize = 18.sp
         )
 
         val Automotive: Dimensions = Phone.copy(
-            titleBarHeight = 100.dp
+            titleBarHeight = 100.dp,
+
+            tileSizeLarge = 500.dp,
+            tileSize = 300.dp,
+            tileSizeSmall = 150.dp,
+
+            headerTextSize = 50.sp,
+            titleTextSize = 34.sp,
+            subTitleTextSize = 30.sp,
+            body1TextSize = 28.sp,
+            body2TextSize = 26.sp,
+            buttonTextSize = 28.sp,
+            captionTextSize = 26.sp
         )
     }
 }
