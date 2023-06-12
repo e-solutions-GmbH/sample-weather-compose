@@ -47,7 +47,7 @@ fun LocationTile(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .height(height = WeatherTheme.dimensions.TileSizeSmall)
+            .height(height = WeatherTheme.dimensions.tileSizeSmall)
             .clickable(onClick = onClick)
     ) {
         Text(

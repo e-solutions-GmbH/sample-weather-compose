@@ -1,5 +1,6 @@
 package de.eso.weather.ui.forecast
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -64,93 +65,6 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
 }
 
 @Composable
-fun ForecastForLocationsGrid(
-    modifier: Modifier = Modifier,
-    activeLocationViewState: ForecastViewState,
-    savedLocationsViewState: List<ForecastViewState>,
-    onGoToWeatherAlertsClicked: () -> Unit
-) {
-    val locationHeadlineText =
-        if (activeLocationViewState.activeLocation == null) {
-            stringResource(R.string.no_location_selected)
-        } else {
-            activeLocationViewState.activeLocation.name
-        }
-
-    val weatherSummary = activeLocationViewState.weather?.weather
-    val activeLocationName = activeLocationViewState.activeLocation?.name
-
-    LazyHorizontalStaggeredGrid(
-        modifier = modifier,
-        rows = StaggeredGridCells.Fixed(3),
-        verticalArrangement = Arrangement.spacedBy(WeatherTheme.dimensions.containerPadding),
-        horizontalItemSpacing = WeatherTheme.dimensions.containerPadding
-    ) {
-        item(span = StaggeredGridItemSpan.FullLine) {
-            ForecastScreenActiveLocationForecast(
-                locationHeadlineText = locationHeadlineText,
-                weatherSummary = weatherSummary,
-                activeLocationName = activeLocationName,
-                onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
-                modifier = Modifier
-                    .width(width = 500.dp)
-                    .fillMaxHeight()
-            )
-        }
-
-        items(savedLocationsViewState) {
-            ForecastSavedLocationForecast(
-                locationName = it.activeLocation?.name ?: "",
-                weatherSummary = it.weather?.weather ?: ""
-            )
-        }
-    }
-}
-
-@Composable
-fun ForecastSavedLocationForecast(
-    modifier: Modifier = Modifier,
-    locationName: String,
-    weatherSummary: String
-) {
-    val weatherIcon = when (weatherSummary) {
-        "Sunshine" -> R.drawable.ic_forecast_sun
-        "Cloudy" -> R.drawable.ic_forecast_cloudy
-        "Rain" -> R.drawable.ic_forecast_rain
-        "Snow" -> R.drawable.ic_forecast_snow
-        "Thunderstorm" -> R.drawable.ic_forecast_thunderstorm
-        else -> R.drawable.ic_forecast_sun
-    }
-
-    Tile(
-        verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.width(width = 300.dp)
-    ) {
-        Text(
-            text = locationName,
-            style = WeatherTheme.typography.h6,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = WeatherTheme.dimensions.titlePadding)
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                painter = painterResource(id = weatherIcon),
-                contentDescription = "",
-                tint = EsoColors.Orange,
-                modifier = Modifier
-                    .size(size = 80.dp)
-                    .padding(end = WeatherTheme.dimensions.iconPadding)
-            )
-            Text(text = weatherSummary)
-        }
-    }
-}
-
-@Composable
 fun ForecastScreenContent(
     viewState: ForecastViewState,
     savedLocationsViewState: List<ForecastViewState>,
@@ -200,6 +114,7 @@ fun ForecastScreenContent(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ForecastScreenLocationsGrid(
     modifier: Modifier = Modifier,

@@ -49,13 +49,13 @@ object WeatherTheme {
         // Choose fitting typography depending on screen size (e.g. larger for Automotive resolutions)
         val displaySizeAdaptedTypography = if (isLargeScreen) {
             commonTypography.copy(
-                h4 = commonTypography.h4.copy(fontSize = dimensions.headerTextSizeLarge),
-                h6 = commonTypography.h6.copy(fontSize = dimensions.titleTextSizeLarge),
-                subtitle1 = commonTypography.subtitle1.copy(fontSize = dimensions.subTitleTextSizeLarge),
-                body1 = commonTypography.body1.copy(fontSize = dimensions.body1TextSizeLarge),
-                body2 = commonTypography.body2.copy(fontSize = dimensions.body2TextSizeLarge),
-                button = commonTypography.button.copy(fontSize = dimensions.buttonTextSizeLarge),
-                caption = commonTypography.caption.copy(fontSize = dimensions.captionTextSizeLarge)
+                h4 = commonTypography.h4.copy(fontSize = dimensions.headerTextSize),
+                h6 = commonTypography.h6.copy(fontSize = dimensions.titleTextSize),
+                subtitle1 = commonTypography.subtitle1.copy(fontSize = dimensions.subTitleTextSize),
+                body1 = commonTypography.body1.copy(fontSize = dimensions.body1TextSize),
+                body2 = commonTypography.body2.copy(fontSize = dimensions.body2TextSize),
+                button = commonTypography.button.copy(fontSize = dimensions.buttonTextSize),
+                caption = commonTypography.caption.copy(fontSize = dimensions.captionTextSize)
             )
         } else {
             commonTypography.copy(

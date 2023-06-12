@@ -10,7 +10,7 @@ data class Dimensions(
 
     val tileSizeLarge: Dp,
     val tileSize: Dp,
-    val TileSizeSmall: Dp,
+    val tileSizeSmall: Dp,
 
     val decoratorSize: Dp,
 
@@ -33,15 +33,7 @@ data class Dimensions(
     val body1TextSize: TextUnit,
     val body2TextSize: TextUnit,
     val buttonTextSize: TextUnit,
-    val captionTextSize: TextUnit,
-
-    val headerTextSizeLarge: TextUnit,
-    val titleTextSizeLarge: TextUnit,
-    val subTitleTextSizeLarge: TextUnit,
-    val body1TextSizeLarge: TextUnit,
-    val body2TextSizeLarge: TextUnit,
-    val buttonTextSizeLarge: TextUnit,
-    val captionTextSizeLarge: TextUnit
+    val captionTextSize: TextUnit
 ) {
     companion object {
         val Phone = Dimensions(
@@ -49,7 +41,7 @@ data class Dimensions(
 
             tileSizeLarge = 300.dp,
             tileSize = 200.dp,
-            TileSizeSmall = 150.dp,
+            tileSizeSmall = 150.dp,
 
             decoratorSize = 300.dp,
 
@@ -80,7 +72,7 @@ data class Dimensions(
 
             tileSizeLarge = 500.dp,
             tileSize = 300.dp,
-            TileSizeSmall = 150.dp,
+            tileSizeSmall = 150.dp,
 
             headerTextSize = 50.sp,
             titleTextSize = 34.sp,
