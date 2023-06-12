@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class Dimensions(
+    val scale: Float = 1.0f,
     val titleBarHeight: Dp,
 
     val tileSizeLarge: Dp,
@@ -83,4 +84,37 @@ data class Dimensions(
             captionTextSize = 26.sp
         )
     }
+}
+
+fun Dimensions.scale(percent: Float): Dimensions {
+    return copy(
+        scale = percent,
+        titleBarHeight = titleBarHeight * percent,
+        tileSizeLarge = tileSizeLarge * percent,
+        tileSize = tileSize * percent,
+        tileSizeSmall = tileSizeSmall * percent,
+
+        decoratorSize = decoratorSize * percent,
+
+        // Padding
+        titlePadding = titlePadding * percent,
+        contentPadding = contentPadding * percent,
+        containerPadding = containerPadding * percent,
+        iconPadding = iconPadding * percent,
+        buttonPadding = buttonPadding * percent,
+
+        // Icon sizes
+        iconSizeButton = iconSizeButton * percent,
+        iconSizeLogo = iconSizeLogo * percent,
+        iconSizeBigLogo = iconSizeBigLogo * percent,
+
+        // Generic text sizes
+        headerTextSize = headerTextSize * percent,
+        titleTextSize = titleTextSize * percent,
+        subTitleTextSize = subTitleTextSize * percent,
+        body1TextSize = body1TextSize * percent,
+        body2TextSize = body1TextSize * percent,
+        buttonTextSize = body1TextSize * percent,
+        captionTextSize = body1TextSize * percent
+    )
 }
