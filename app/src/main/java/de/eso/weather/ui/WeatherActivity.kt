@@ -65,6 +65,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -187,10 +188,14 @@ class WeatherActivity : AppCompatActivity() {
                         constrain(navigationRef) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
+                            bottom.linkTo(parent.bottom)
                         }
                         constrain(contentRef) {
                             top.linkTo(parent.top)
                             start.linkTo(navigationRef.end)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                            width = Dimension.fillToConstraints
                         }
                     } else {
                         constrain(contentRef) {
@@ -225,7 +230,7 @@ class WeatherActivity : AppCompatActivity() {
                         )
                     }
 
-                    NavHost(
+                    WeatherNavHost(
                         modifier = Modifier
                             .layoutId("content")
                             .padding(8.dp),
@@ -472,7 +477,7 @@ class WeatherActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun NavHost(
+    fun WeatherNavHost(
         modifier: Modifier = Modifier,
         navController: NavHostController,
         onColorPaletteSelected: (ColorPalette) -> Unit
