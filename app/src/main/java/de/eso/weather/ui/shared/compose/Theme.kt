@@ -90,6 +90,7 @@ val LocalDimensions = staticCompositionLocalOf { Dimensions.Phone }
 fun WeatherTheme(
     isLargeScreen: Boolean = false,
     colorPalette: ColorPalette = ColorPalettes.DarkBlue,
+    dimensionScale: Float = 1.0f,
     content: @Composable () -> Unit
 ) {
     val screenSize = ScreenSize(
@@ -105,7 +106,7 @@ fun WeatherTheme(
     CompositionLocalProvider(
         LocalScreenSize provides screenSize,
         LocalColorPalette provides colorPalette,
-        LocalDimensions provides screenSizeDependentDimensions
+        LocalDimensions provides screenSizeDependentDimensions.scale(dimensionScale)
     ) {
         MaterialTheme(
             content = content,

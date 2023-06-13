@@ -82,6 +82,7 @@ import de.eso.weather.ui.shared.compose.LocalScreenSize
 import de.eso.weather.ui.shared.compose.ScreenSize
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
+import de.eso.weather.ui.shared.compose.scale
 import de.eso.weather.ui.themeselection.ThemeSelectionScreen
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -111,6 +112,8 @@ class WeatherActivity : AppCompatActivity() {
         var currentRoute: String? by remember { mutableStateOf(null) }
         val currentScreenName = screenNameFor(currentRoute)
         var activeColorPalette by remember { mutableStateOf(ColorPalettes.DarkBlue) }
+        var activeDimensionScale by remember { mutableStateOf(1.0f) }
+
 
         DisposableEffect(true) {
             val destinationChangedListener =
@@ -128,7 +131,8 @@ class WeatherActivity : AppCompatActivity() {
 
         WeatherTheme(
             isLargeScreen = LocalConfiguration.current.isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE),
-            colorPalette = activeColorPalette
+            colorPalette = activeColorPalette,
+            dimensionScale = activeDimensionScale
         ) {
             Scaffold(
                 topBar = {
@@ -215,6 +219,9 @@ class WeatherActivity : AppCompatActivity() {
                         navController = navController,
                         onColorPaletteSelected = {
                             activeColorPalette = it
+                        },
+                        onSizeSelected = {
+                            activeDimensionScale = it
                         }
                     )
                 }
@@ -452,8 +459,9 @@ class WeatherActivity : AppCompatActivity() {
     fun WeatherNavHost(
         modifier: Modifier = Modifier,
         navController: NavHostController,
-        onColorPaletteSelected: (ColorPalette) -> Unit
-    ) {
+        onColorPaletteSelected: (ColorPalette) -> Unit,
+        onSizeSelected: (Float) -> Unit
+) {
         NavHost(
             navController = navController,
             startDestination = Routes.FORECAST,
@@ -482,7 +490,8 @@ class WeatherActivity : AppCompatActivity() {
             }
             composable(Routes.THEME_SELECTION) {
                 ThemeSelectionScreen(
-                    onColorPaletteSelected = onColorPaletteSelected
+                    onColorPaletteSelected = onColorPaletteSelected,
+                    onSizeSelected = onSizeSelected
                 )
             }
         }
