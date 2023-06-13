@@ -47,12 +47,11 @@ val uiModule = module {
 
     viewModel {
         FavoriteLocationsViewModel(
-            locationService = get(),
             favoriteLocationsRepository = get()
         )
     }
 
-    viewModel { LocationSearchViewModel(locationService = get()) }
+    viewModel { LocationSearchViewModel(locationService = get(), favoriteLocationsRepository = get()) }
 }
 
 val domainModule = module {

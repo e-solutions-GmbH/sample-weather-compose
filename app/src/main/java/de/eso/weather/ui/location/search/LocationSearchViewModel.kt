@@ -2,17 +2,22 @@ package de.eso.weather.ui.location.search
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import de.eso.weather.domain.location.api.FavoriteLocationsRepository
 import de.eso.weather.domain.location.api.LocationService
 import de.eso.weather.domain.shared.api.Location
+import de.eso.weather.ui.shared.livedatacommand.LiveDataCommand
 import de.eso.weather.ui.shared.livedatacommand.LiveDataEvent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 
-class LocationSearchViewModel(private val locationService: LocationService) : ViewModel() {
+class LocationSearchViewModel(
+    private val locationService: LocationService,
+    private val favoriteLocationsRepository: FavoriteLocationsRepository
+) : ViewModel() {
 
     val queryInput = mutableStateOf("")
     val locations = mutableStateOf(emptyList<Location>())
-    val finishWithResult = mutableStateOf<LiveDataEvent<Location>?>(null)
+    val finishScreen = mutableStateOf<LiveDataCommand?>(null)
 
     private val disposables = CompositeDisposable()
 
@@ -26,7 +31,9 @@ class LocationSearchViewModel(private val locationService: LocationService) : Vi
     }
 
     fun onLocationSelected(location: Location) {
-        finishWithResult.value = LiveDataEvent(location)
+        favoriteLocationsRepository.saveLocation(location)
+        favoriteLocationsRepository.setActive(location)
+        finishScreen.value = LiveDataCommand()
     }
 
     private fun triggerLocationSearch(query: String) {
