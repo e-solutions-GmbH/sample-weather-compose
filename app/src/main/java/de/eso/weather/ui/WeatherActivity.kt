@@ -144,7 +144,7 @@ class WeatherActivity : AppCompatActivity() {
                                 IconButton(onClick = { navController.popBackStack() }) {
                                     Icon(
                                         imageVector = Icons.Default.ArrowBack,
-                                        tint = EsoColors.Orange,
+                                        tint = WeatherTheme.colorPalette.iconTint,
                                         contentDescription = "backIcon"
                                     )
                                 }

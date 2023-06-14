@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -36,46 +37,31 @@ object WeatherTheme {
         get() = LocalDimensions.current
 
     @Composable
-    fun createTypography(isLargeScreen: Boolean = false): Typography {
-        val defaultFontFamily = FontFamily(Font(R.font.calibri))
-        val headlineFontFamily = FontFamily(Font(R.font.cambria))
-
-        val commonTypography = Typography(
-            defaultFontFamily = defaultFontFamily,
-            h4 = TextStyle(fontFamily = headlineFontFamily, color = EsoColors.Orange),
-            h6 = TextStyle(fontFamily = headlineFontFamily, color = EsoColors.Orange)
+    fun createTypography(fontStyle: FontStyle): Typography {
+        return Typography(
+            defaultFontFamily = fontStyle.defaultFontFamily,
+            h4 = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.headerTextSize),
+            h6 = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.titleTextSize),
+            subtitle1 = TextStyle(fontSize = dimensions.subTitleTextSize, color = fontStyle.contentColor),
+            body1 = TextStyle(fontSize = dimensions.body1TextSize, color = fontStyle.contentColor),
+            body2 = TextStyle(fontSize = dimensions.body2TextSize, color = fontStyle.contentColor),
+            button = TextStyle(fontSize = dimensions.buttonTextSize, color = fontStyle.contentColor),
+            caption = TextStyle(fontSize = dimensions.captionTextSize, color = fontStyle.contentColor)
         )
-
-        // Choose fitting typography depending on screen size (e.g. larger for Automotive resolutions)
-        val displaySizeAdaptedTypography = if (isLargeScreen) {
-            commonTypography.copy(
-                h4 = commonTypography.h4.copy(fontSize = dimensions.headerTextSize),
-                h6 = commonTypography.h6.copy(fontSize = dimensions.titleTextSize),
-                subtitle1 = commonTypography.subtitle1.copy(fontSize = dimensions.subTitleTextSize),
-                body1 = commonTypography.body1.copy(fontSize = dimensions.body1TextSize),
-                body2 = commonTypography.body2.copy(fontSize = dimensions.body2TextSize),
-                button = commonTypography.button.copy(fontSize = dimensions.buttonTextSize),
-                caption = commonTypography.caption.copy(fontSize = dimensions.captionTextSize)
-            )
-        } else {
-            commonTypography.copy(
-                h4 = commonTypography.h4.copy(fontSize = dimensions.headerTextSize),
-                h6 = commonTypography.h6.copy(fontSize = dimensions.titleTextSize),
-                subtitle1 = commonTypography.subtitle1.copy(fontSize = dimensions.subTitleTextSize),
-                body1 = commonTypography.body1.copy(fontSize = dimensions.body1TextSize),
-                body2 = commonTypography.body2.copy(fontSize = dimensions.body2TextSize),
-                button = commonTypography.button.copy(fontSize = dimensions.buttonTextSize),
-                caption = commonTypography.caption.copy(fontSize = dimensions.captionTextSize)
-            )
-        }
-
-        return displaySizeAdaptedTypography
     }
 }
 
 @Immutable
 data class ScreenSize(
     val isLargeScreen: Boolean
+)
+
+@Immutable
+data class FontStyle(
+    val defaultFontFamily: FontFamily = FontFamily(Font(R.font.calibri)),
+    val headlineFontFamily: FontFamily = FontFamily(Font(R.font.cambria)),
+    val headerColor: Color = EsoColors.Orange,
+    val contentColor: Color = EsoColors.White
 )
 
 val LocalScreenSize = staticCompositionLocalOf {
@@ -90,6 +76,7 @@ val LocalDimensions = staticCompositionLocalOf { Dimensions.Phone }
 fun WeatherTheme(
     isLargeScreen: Boolean = false,
     colorPalette: ColorPalette = ColorPalettes.DarkBlue,
+    fontStyle: FontStyle = FontStyle(),
     dimensionScale: Float = 1.0f,
     content: @Composable () -> Unit
 ) {
@@ -111,7 +98,7 @@ fun WeatherTheme(
         MaterialTheme(
             content = content,
             colors = colorPalette.colors,
-            typography = WeatherTheme.createTypography(isLargeScreen)
+            typography = WeatherTheme.createTypography(fontStyle)
         )
     }
 }

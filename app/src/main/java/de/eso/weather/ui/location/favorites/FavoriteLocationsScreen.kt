@@ -14,12 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.location.shared.LocationGrid
 import de.eso.weather.ui.routing.api.Routes
-import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.livedatacommand.LiveDataCommand
 
@@ -69,7 +67,7 @@ fun FavoriteLocationsScreenContent(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add Location",
-                tint = EsoColors.Orange
+                tint = WeatherTheme.colorPalette.iconTint
             )
         }
     }

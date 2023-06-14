@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,11 +25,15 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -40,7 +43,9 @@ import de.eso.weather.R
 import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.routing.api.Routes
-import de.eso.weather.ui.shared.compose.EsoColors
+import de.eso.weather.ui.shared.compose.ColorPalette
+import de.eso.weather.ui.shared.compose.ColorPalettes
+import de.eso.weather.ui.shared.compose.FontStyle
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
@@ -198,12 +203,13 @@ fun ForecastScreenActiveLocationForecast(
             weatherSummary?.let {
                 Text(
                     text = weatherSummary,
-                    modifier = Modifier.weight(weight = 1f)
+                    modifier = Modifier.weight(weight = 1f),
+                    style = WeatherTheme.typography.body1
                 )
                 Icon(
                     painter = painterResource(id = weatherIcon),
                     contentDescription = weatherSummary,
-                    tint = EsoColors.Orange,
+                    tint = WeatherTheme.colorPalette.iconTint,
                     modifier = Modifier
                         .weight(weight = 2f)
                         .fillMaxHeight()
@@ -260,7 +266,7 @@ fun ForecastScreenSavedLocationForecast(
             Icon(
                 painter = painterResource(id = weatherIcon),
                 contentDescription = "",
-                tint = EsoColors.Orange,
+                tint = WeatherTheme.colorPalette.iconTint,
                 modifier = Modifier
                     .size(size = WeatherTheme.dimensions.iconSizeButton)
                     .padding(end = WeatherTheme.dimensions.iconPadding)
@@ -284,6 +290,7 @@ fun ForecastScreenAddLocation(
             Icon(
                 imageVector = Icons.Filled.Add,
                 contentDescription = null,
+                tint = WeatherTheme.colorPalette.iconTint,
                 modifier = Modifier
                     .size(size = WeatherTheme.dimensions.iconSizeButton)
                     .padding(end = WeatherTheme.dimensions.iconPadding)
@@ -304,20 +311,55 @@ fun ForecastScreenEsoLogo(
     )
 }
 
-@Preview(device = Devices.AUTOMOTIVE_1024p)
+data class OemSkin(
+    val colorPalette: ColorPalette,
+    val fontStyle: FontStyle = FontStyle(),
+    val dimensionScale: Float = 1.0f
+)
+
+class OemSkinProvider : CollectionPreviewParameterProvider<OemSkin>(
+    listOf(
+        OemSkin(colorPalette = ColorPalettes.DarkBlue),
+        OemSkin(
+            colorPalette = ColorPalettes.DarkBlue,
+            fontStyle = FontStyle(
+                defaultFontFamily = FontFamily.Cursive,
+                headlineFontFamily = FontFamily.Monospace
+            )
+        ),
+        OemSkin(
+            colorPalette = ColorPalettes.DarkGreen,
+            fontStyle = FontStyle(
+                defaultFontFamily = FontFamily.Cursive,
+                headlineFontFamily = FontFamily.Monospace
+            )
+        ),
+        OemSkin(
+            colorPalette = ColorPalettes.Violet.copy(iconTint = Color.Magenta.copy(alpha = 0.65f)),
+            fontStyle = FontStyle(
+                defaultFontFamily = FontFamily.Serif,
+                headlineFontFamily = FontFamily.SansSerif,
+                headerColor = Color.Magenta.copy(alpha = 0.65f)
+            )
+        )
+    )
+)
+
+@Preview(widthDp = 300, heightDp = 120)
 @Composable
-fun ForecastScreenContentPreviewAutomotive() {
-    ForecastScreenContentPreview(isLargeScreen = true)
+fun ForecastScreenSavedLocationForecastPreview(@PreviewParameter(OemSkinProvider::class) oemSkin: OemSkin) {
+    WeatherTheme(
+        colorPalette = oemSkin.colorPalette,
+        fontStyle = oemSkin.fontStyle,
+        dimensionScale = oemSkin.dimensionScale
+    ) {
+        ForecastScreenSavedLocationForecast(locationName = "Erlangen", weatherSummary = "Thunderstorm")
+    }
 }
 
-@Preview(device = Devices.PIXEL_4)
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 450)
 @Composable
-fun ForecastScreenContentPreviewDefault() {
-    ForecastScreenContentPreview()
-}
-
-@Composable
-fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
+fun ForecastScreenContentPreview(@PreviewParameter(OemSkinProvider::class) oemSkin: OemSkin) {
     val activeLocation = Location("Erlangen")
     val viewState = ForecastViewState(
         activeLocation = activeLocation,
@@ -331,7 +373,11 @@ fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
         Location(name = "Tennenlohe"),
     )
 
-    WeatherTheme {
+    WeatherTheme(
+        colorPalette = oemSkin.colorPalette,
+        fontStyle = oemSkin.fontStyle,
+        dimensionScale = oemSkin.dimensionScale
+    ) {
         GridBackground()
         ForecastScreenContent(
             viewState,
@@ -343,7 +389,7 @@ fun ForecastScreenContentPreview(isLargeScreen: Boolean = false) {
             },
             {},
             {},
-            isLargeScreen
+            true
         )
     }
 }
