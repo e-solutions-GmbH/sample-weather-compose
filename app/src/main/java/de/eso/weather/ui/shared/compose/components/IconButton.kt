@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
-import de.eso.weather.ui.shared.compose.EsoColors
 import de.eso.weather.ui.shared.compose.WeatherTheme
 
 @Composable
@@ -20,7 +19,7 @@ fun IconAndTextButton(
     text: String,
     contentDescription: String,
     modifier: Modifier = Modifier,
-    tint: Color = EsoColors.Orange,
+    tint: Color = WeatherTheme.colorPalette.iconTint,
     iconSize: Dp = WeatherTheme.dimensions.iconSizeButton,
     textFillsSpace: Boolean = false
 ) {

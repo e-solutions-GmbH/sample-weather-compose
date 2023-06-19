@@ -144,7 +144,7 @@ fun AlertTile(
         alertIcon?.let {
             Icon(
                 painter = painterResource(id = alertIcon.first),
-                tint = alertIcon.second,
+                tint = WeatherTheme.colorPalette.iconTint,
                 contentDescription = alertListItem.alert.alert,
                 modifier = Modifier
                     .fillMaxWidth()
