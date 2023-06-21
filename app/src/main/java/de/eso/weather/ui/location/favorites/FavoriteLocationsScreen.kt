@@ -1,24 +1,22 @@
 package de.eso.weather.ui.location.favorites
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rxjava3.subscribeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.location.shared.LocationGrid
+import de.eso.weather.ui.location.shared.LocationTile
 import de.eso.weather.ui.routing.api.Routes
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.AddItemTile
 import de.eso.weather.ui.shared.livedatacommand.LiveDataCommand
 
 @Composable
@@ -57,17 +55,19 @@ fun FavoriteLocationsScreenContent(
     onAddLocationClicked: () -> Unit,
     isLargeScreen: Boolean = false
 ) {
-    Box {
-        LocationGrid(isLargeScreen, locations, onLocationSelected)
+    LocationGrid(isLargeScreen = isLargeScreen) {
+        items(items = locations, key = { item: Location -> item.id }) { location ->
+            LocationTile(
+                locationName = location.name,
+                onClick = { onLocationSelected(location) }
+            )
+        }
 
-        FloatingActionButton(
-            modifier = Modifier.align(alignment = Alignment.BottomEnd),
-            onClick = onAddLocationClicked
-        ) {
-            Icon(
+        item {
+            AddItemTile(
+                text = "Add Location",
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Location",
-                tint = WeatherTheme.colorPalette.iconTint
+                onClick = onAddLocationClicked
             )
         }
     }

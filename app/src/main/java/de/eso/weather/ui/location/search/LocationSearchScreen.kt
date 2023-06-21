@@ -56,10 +56,9 @@ fun LocationSearchScreenContent(
         )
 
         LocationGrid(
-            isLargeScreen = false,
+            isLargeScreen = WeatherTheme.isLargeScreen(),
             locations = locations,
             onLocationSelected = onLocationSelected
         )
     }
 }
-

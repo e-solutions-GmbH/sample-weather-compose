@@ -5,12 +5,13 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,10 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import de.eso.weather.ui.forecast.ForecastScreenActiveLocationForecast
 import de.eso.weather.ui.shared.compose.ColorPalette
 import de.eso.weather.ui.shared.compose.ColorPalettes
@@ -33,34 +33,37 @@ fun ThemeSelectionScreen(
     onColorPaletteSelected: (ColorPalette) -> Unit,
     onSizeSelected: (Float) -> Unit
 ) {
-    Column {
-        SizeScaling(onSizeSelected = onSizeSelected)
-        ThemeSelection(onColorPaletteSelected)
-    }
-}
+    val isLargeScreen = WeatherTheme.isLargeScreen()
 
-@Composable
-private fun ThemeSelection(onColorPaletteSelected: (ColorPalette) -> Unit) {
-    Text(
-        "Available themes",
-        modifier = Modifier.padding(
-            top = WeatherTheme.dimensions.contentPadding,
-            bottom = WeatherTheme.dimensions.contentPadding
-        )
-    )
-
-    val boxWidthModifier = if (!WeatherTheme.isLargeScreen()) {
+    val boxWidthModifier = if (!isLargeScreen) {
         Modifier.fillMaxWidth()
     } else {
         Modifier
     }
 
-    LazyColumn(
+    val cellCount = if (isLargeScreen) 3 else 1
+
+    LazyVerticalGrid(
         modifier = boxWidthModifier,
-        verticalArrangement = Arrangement.spacedBy(WeatherTheme.dimensions.contentPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
+        columns = GridCells.Fixed(count = cellCount),
+        horizontalArrangement = Arrangement.spacedBy(space = WeatherTheme.dimensions.containerPadding),
+        verticalArrangement = Arrangement.spacedBy(space = WeatherTheme.dimensions.containerPadding)
     ) {
-        items(ColorPalettes.all) { colorPalette ->
+        item(span = { GridItemSpan(currentLineSpan = cellCount) }) {
+            SizeScaling(onSizeSelected = onSizeSelected)
+        }
+
+        item(span = { GridItemSpan(currentLineSpan = cellCount) }) {
+            Text(
+                "Available themes",
+                modifier = Modifier.padding(
+                    top = WeatherTheme.dimensions.contentPadding,
+                    bottom = WeatherTheme.dimensions.contentPadding
+                )
+            )
+        }
+
+        items(items = ColorPalettes.all, key = { item: ColorPalette -> item.name }) { colorPalette ->
             WeatherTheme(colorPalette = colorPalette) {
                 Box(
                     modifier = Modifier
@@ -84,22 +87,25 @@ fun SizeScaling(onSizeSelected: (Float) -> Unit) {
     val initialScale = LocalDimensions.current.scale
     var size by remember { mutableStateOf(initialScale) }
 
-    Text("Zoom: ${(size * 100).toInt()} %")
-    Slider(
-        value = size,
-        onValueChange = {
-            size = it
-        },
-        valueRange = 0.75f..2f,
-        steps = 4,
-        onValueChangeFinished = {
-            onSizeSelected(size)
-        },
-        interactionSource = MutableInteractionSource()
-    )
+    Column {
+        Text("Zoom: ${(size * 100).toInt()} %")
+        Slider(
+            value = size,
+            onValueChange = {
+                size = it
+            },
+            valueRange = 0.75f..2f,
+            steps = 4,
+            onValueChangeFinished = {
+                onSizeSelected(size)
+            },
+            interactionSource = MutableInteractionSource()
+        )
+    }
 }
 
 @Preview
+@Preview(device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun ThemeSelectionScreenPreview() {
     ThemeSelectionScreen(
