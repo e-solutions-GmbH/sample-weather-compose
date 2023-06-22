@@ -86,9 +86,9 @@ fun AlertScreenContent(
 
 @Composable
 fun Alerts(
+    modifier: Modifier = Modifier,
     alerts: List<AlertListItem>,
-    isLargeScreen: Boolean = false,
-    modifier: Modifier = Modifier
+    isLargeScreen: Boolean = false
 ) {
     if (isLargeScreen) {
         LazyRow(

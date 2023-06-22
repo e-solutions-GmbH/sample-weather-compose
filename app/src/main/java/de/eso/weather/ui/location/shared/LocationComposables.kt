@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Text
@@ -33,6 +34,20 @@ fun LocationGrid(
                 )
             }
         },
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+fun LocationGrid(
+    isLargeScreen: Boolean,
+    content: LazyGridScope.() -> Unit
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(count = if (isLargeScreen) 3 else 2),
+        verticalArrangement = Arrangement.spacedBy(space = WeatherTheme.dimensions.containerPadding),
+        horizontalArrangement = Arrangement.spacedBy(space = WeatherTheme.dimensions.containerPadding),
+        content = content,
         modifier = Modifier.fillMaxSize()
     )
 }

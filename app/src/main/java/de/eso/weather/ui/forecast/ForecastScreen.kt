@@ -2,7 +2,6 @@ package de.eso.weather.ui.forecast
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.Icon
@@ -47,6 +44,8 @@ import de.eso.weather.ui.shared.compose.ColorPalette
 import de.eso.weather.ui.shared.compose.ColorPalettes
 import de.eso.weather.ui.shared.compose.FontStyle
 import de.eso.weather.ui.shared.compose.WeatherTheme
+import de.eso.weather.ui.shared.compose.components.AdaptiveStaggeredGrid
+import de.eso.weather.ui.shared.compose.components.AddItemTile
 import de.eso.weather.ui.shared.compose.components.GridBackground
 import de.eso.weather.ui.shared.compose.components.IconAndTextButton
 import de.eso.weather.ui.shared.compose.components.Tile
@@ -74,9 +73,9 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
 fun ForecastScreenContent(
     viewState: ForecastViewState,
     savedLocationsViewState: List<ForecastViewState>,
+    isLargeScreen: Boolean = WeatherTheme.isLargeScreen(),
     onGoToWeatherAlertsClicked: () -> Unit,
-    onAddLocationClicked: () -> Unit,
-    isLargeScreen: Boolean = false
+    onAddLocationClicked: () -> Unit
 ) {
     BoxWithConstraints {
         val constraints = ConstraintSet {
@@ -126,6 +125,7 @@ fun ForecastScreenLocationsGrid(
     modifier: Modifier = Modifier,
     activeLocationViewState: ForecastViewState,
     savedLocationsViewState: List<ForecastViewState>,
+    isLargeScreen: Boolean = WeatherTheme.isLargeScreen(),
     onGoToWeatherAlertsClicked: () -> Unit,
     onAddLocationClicked: () -> Unit
 ) {
@@ -139,21 +139,28 @@ fun ForecastScreenLocationsGrid(
     val weatherSummary = activeLocationViewState.weather?.weather
     val activeLocationName = activeLocationViewState.activeLocation?.name
 
-    LazyHorizontalStaggeredGrid(
-        modifier = modifier,
-        rows = StaggeredGridCells.Fixed(3),
-        verticalArrangement = Arrangement.spacedBy(WeatherTheme.dimensions.containerPadding),
-        horizontalItemSpacing = WeatherTheme.dimensions.containerPadding
-    ) {
+    val activeTileModifier = when {
+        isLargeScreen -> Modifier
+            .width(width = WeatherTheme.dimensions.tileSizeLarge)
+            .fillMaxHeight()
+        else -> Modifier
+            .height(height = WeatherTheme.dimensions.tileSizeLarge)
+            .fillMaxWidth()
+    }
+
+    val tileModifier = when {
+        isLargeScreen -> Modifier.width(width = WeatherTheme.dimensions.tileSize)
+        else -> Modifier.height(height = WeatherTheme.dimensions.tileSize)
+    }
+
+    AdaptiveStaggeredGrid(modifier = modifier) {
         item(span = StaggeredGridItemSpan.FullLine) {
             ForecastScreenActiveLocationForecast(
                 locationHeadlineText = locationHeadlineText,
                 weatherSummary = weatherSummary,
                 activeLocationName = activeLocationName,
                 onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
-                modifier = Modifier
-                    .width(width = WeatherTheme.dimensions.tileSizeLarge)
-                    .fillMaxHeight()
+                modifier = activeTileModifier
             )
         }
 
@@ -161,16 +168,16 @@ fun ForecastScreenLocationsGrid(
             ForecastScreenSavedLocationForecast(
                 locationName = it.activeLocation?.name ?: "",
                 weatherSummary = it.weather?.weather ?: "",
-                modifier = Modifier
-                    .width(width = WeatherTheme.dimensions.tileSize)
+                modifier = tileModifier
             )
         }
 
         item {
-            ForecastScreenAddLocation(
-                modifier = Modifier
-                    .width(width = WeatherTheme.dimensions.tileSize)
-                    .clickable { onAddLocationClicked() }
+            AddItemTile(
+                text = "Add Location",
+                imageVector = Icons.Filled.Add,
+                onClick = onAddLocationClicked,
+                modifier = tileModifier
             )
         }
     }
@@ -277,30 +284,6 @@ fun ForecastScreenSavedLocationForecast(
 }
 
 @Composable
-fun ForecastScreenAddLocation(
-    modifier: Modifier = Modifier
-) {
-    Tile(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        borderColor = WeatherTheme.colorPalette.colors.onPrimary,
-        backgroundColor = WeatherTheme.colorPalette.colors.primaryVariant
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = null,
-                tint = WeatherTheme.colorPalette.iconTint,
-                modifier = Modifier
-                    .size(size = WeatherTheme.dimensions.iconSizeButton)
-                    .padding(end = WeatherTheme.dimensions.iconPadding)
-            )
-            Text(text = "Add Location")
-        }
-    }
-}
-
-@Composable
 fun ForecastScreenEsoLogo(
     modifier: Modifier = Modifier
 ) {
@@ -327,6 +310,7 @@ class OemSkinProvider : CollectionPreviewParameterProvider<OemSkin>(
                 headlineFontFamily = FontFamily.Monospace
             )
         ),
+        // ...
         OemSkin(
             colorPalette = ColorPalettes.DarkGreen,
             fontStyle = FontStyle(
@@ -357,9 +341,12 @@ fun ForecastScreenSavedLocationForecastPreview(@PreviewParameter(OemSkinProvider
     }
 }
 
+// @Preview(device = Devices.PHONE, widthDp = 500, heightDp = 900)
 @Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 450)
 @Composable
-fun ForecastScreenContentPreview(@PreviewParameter(OemSkinProvider::class) oemSkin: OemSkin) {
+fun ForecastScreenContentPreview(
+    @PreviewParameter(OemSkinProvider::class) oemSkin: OemSkin
+) {
     val activeLocation = Location("Erlangen")
     val viewState = ForecastViewState(
         activeLocation = activeLocation,
@@ -380,16 +367,16 @@ fun ForecastScreenContentPreview(@PreviewParameter(OemSkinProvider::class) oemSk
     ) {
         GridBackground()
         ForecastScreenContent(
-            viewState,
-            savedLocations.map { location ->
+            // ---
+            viewState = viewState,
+            savedLocationsViewState = savedLocations.map { location ->
                 ForecastViewState(
                     activeLocation = location,
                     weather = WeatherTO(weather = "Sunshine", location = location)
                 )
             },
-            {},
-            {},
-            true
+            onAddLocationClicked = {},
+            onGoToWeatherAlertsClicked = {}
         )
     }
 }
