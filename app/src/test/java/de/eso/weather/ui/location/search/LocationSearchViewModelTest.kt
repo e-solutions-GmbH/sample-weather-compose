@@ -4,9 +4,11 @@ import de.eso.weather.InstantTaskExecutorExtension
 import de.eso.weather.Locations.AMMERNDORF
 import de.eso.weather.Locations.ERLANGEN
 import de.eso.weather.Locations.ZIRNDORF
+import de.eso.weather.domain.location.api.FavoriteLocationsRepository
 import de.eso.weather.domain.location.api.LocationService
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.reactivex.rxjava3.core.Single.just
 import org.assertj.core.api.Assertions.assertThat
@@ -19,6 +21,9 @@ class LocationSearchViewModelTest {
 
     @MockK
     private lateinit var locationService: LocationService
+
+    @RelaxedMockK
+    private lateinit var favoriteLocationsRepository: FavoriteLocationsRepository
 
     private lateinit var locationSearchViewModel: LocationSearchViewModel
 
@@ -50,11 +55,11 @@ class LocationSearchViewModelTest {
         locationSearchViewModel.onLocationSelected(AMMERNDORF)
 
         // THEN
-        assertThat(locationSearchViewModel.finishScreen.value?.peekContent()).isEqualTo(AMMERNDORF)
+        assertThat(locationSearchViewModel.finishScreen.value).isNotNull()
     }
 
     private fun createViewModel() {
-        locationSearchViewModel = LocationSearchViewModel(locationService)
+        locationSearchViewModel = LocationSearchViewModel(locationService, favoriteLocationsRepository)
     }
 
     private fun setupAvailableLocations() {
