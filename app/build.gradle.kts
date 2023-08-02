@@ -29,6 +29,7 @@ android {
             kotlinCompilerExtensionVersion = composeCompilerVersion
         }
 
+        // TODO was this removed?
         kotlinOptions {
             jvmTarget = "17"
         }
@@ -128,6 +129,7 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-agent-jvm:$mockkVersion")
 
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")

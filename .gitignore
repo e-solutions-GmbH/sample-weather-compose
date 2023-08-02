@@ -7,3 +7,4 @@ local.properties
 .jenkins*
 .hprof
 captures/
+cdg-pitest-licence.txt
