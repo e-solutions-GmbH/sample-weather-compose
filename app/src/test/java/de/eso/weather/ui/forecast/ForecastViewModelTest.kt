@@ -6,9 +6,11 @@ import de.eso.weather.domain.forecast.api.WeatherForecastService
 import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.location.api.FavoriteLocationsRepository
 import de.eso.weather.domain.location.api.LocationService
+import de.eso.weather.domain.shared.platform.Locations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.just
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
@@ -36,6 +38,7 @@ class ForecastViewModelTest {
     @BeforeEach
     fun setup() {
         setupAvailableLocations()
+        setupSavedLocations()
     }
 
     @Test
@@ -62,6 +65,10 @@ class ForecastViewModelTest {
 
     private fun setupActiveLocation() {
         every { favoriteLocationsRepository.activeLocation } returns just(Optional.of(ERLANGEN))
+    }
+
+    private fun setupSavedLocations() {
+        every { favoriteLocationsRepository.savedLocations } returns just(Locations.knownLocations)
     }
 
     private fun createViewModel() {

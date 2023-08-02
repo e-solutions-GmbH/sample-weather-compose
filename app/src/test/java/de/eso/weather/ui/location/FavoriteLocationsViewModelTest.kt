@@ -44,6 +44,6 @@ class FavoriteLocationsViewModelTest {
 
     private fun createViewModel() {
         favoriteLocationsViewModel =
-            FavoriteLocationsViewModel(locationService, favoriteLocationsRepository)
+            FavoriteLocationsViewModel(favoriteLocationsRepository)
     }
 }

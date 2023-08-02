@@ -35,7 +35,7 @@ class ForecastScreenContentTest {
         composeTestRule.setContent {
             ForecastScreenContent(
                 viewState = ForecastViewState(ERLANGEN, WeatherTO(GOOD_WEATHER, ERLANGEN)),
-                snackbarHostState = SnackbarHostState(),
+                savedLocationsViewState = listOf(ForecastViewState(ERLANGEN, WeatherTO(GOOD_WEATHER, ERLANGEN))),
                 onGoToWeatherAlertsClicked = { },
                 onAddLocationClicked = { }
             )
