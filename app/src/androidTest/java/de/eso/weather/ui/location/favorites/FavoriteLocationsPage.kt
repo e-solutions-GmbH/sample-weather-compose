@@ -6,10 +6,11 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import de.eso.weather.ui.onTextInButton
+import de.eso.weather.R
 
-class FavoriteLocationsPage(private val context: Context, private val composeTestRule: ComposeTestRule) {
+class FavoriteLocationsPage(context: Context, private val composeTestRule: ComposeTestRule) {
 
-    private val ADD_LOCATION_BUTTON = composeTestRule.onTextInButton("+")
+    private val ADD_LOCATION_BUTTON = composeTestRule.onTextInButton(context.resources.getString(R.string.location_add_title))
 
     fun isVisible() = also {
         ADD_LOCATION_BUTTON.assertIsDisplayed()

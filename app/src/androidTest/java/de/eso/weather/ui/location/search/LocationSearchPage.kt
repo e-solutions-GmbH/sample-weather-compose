@@ -4,12 +4,11 @@ import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import de.eso.weather.ui.onTextInButton
+import de.eso.weather.R
 
-class LocationSearchPage(private val composeTestRule: ComposeTestRule) {
+class LocationSearchPage(context: Context, composeTestRule: ComposeTestRule) {
 
-    private val LOCATION_SEARCH_SCREEN = composeTestRule.onNodeWithText("Available Locations")
+    private val LOCATION_SEARCH_SCREEN = composeTestRule.onNodeWithText(context.resources.getString(R.string.location_add_title))
 
     fun isVisible() = also {
         LOCATION_SEARCH_SCREEN.assertIsDisplayed()

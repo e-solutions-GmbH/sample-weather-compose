@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.eso.weather.ui.shared.compose.WeatherTheme
@@ -60,7 +61,7 @@ fun AddItemTile(
     Tile(
         modifier = modifier
             .height(height = WeatherTheme.dimensions.tileSizeSmall)
-            .clickable { onClick() },
+            .clickable(role = Role.Button) { onClick() },
         verticalArrangement = Arrangement.Center,
         borderColor = WeatherTheme.colorPalette.colors.onPrimary,
         backgroundColor = WeatherTheme.colorPalette.colors.primaryVariant

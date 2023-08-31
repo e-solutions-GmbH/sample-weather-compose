@@ -19,7 +19,7 @@ class ForecastViewModel(
     favoriteLocationsRepository: FavoriteLocationsRepository,
     mainScheduler: Scheduler = AndroidSchedulers.mainThread()
 ) : ViewModel() {
-    var forecastViewState by mutableStateOf(ForecastViewState())
+    var forecastViewState by mutableStateOf(EmptyForecastViewState)
     var forecastSavedLocationsViewState by mutableStateOf<List<ForecastViewState>>(emptyList())
 
     private val disposables = CompositeDisposable()
@@ -29,17 +29,14 @@ class ForecastViewModel(
             .activeLocation
             .switchMap { location ->
                 if (!location.isPresent) {
-                    Observable.just(ForecastViewState())
+                    Observable.just(EmptyForecastViewState)
                 } else {
-                    Observable
-                        .just(ForecastViewState(location.get()))
-                        .mergeWith(
-                            weatherForecastService
-                                .getWeather(location.get())
-                                .map { weatherTO -> ForecastViewState(location.get(), weatherTO) }
-                        )
+                    weatherForecastService
+                        .getWeather(location.get())
+                        .map { weatherTO -> ForecastViewState(location.get(), weatherTO) }
                 }
             }
+            .filter { it != EmptyForecastViewState }
             .observeOn(mainScheduler)
             .subscribe {
                 forecastViewState = it
