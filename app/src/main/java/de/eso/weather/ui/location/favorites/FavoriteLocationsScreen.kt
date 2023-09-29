@@ -7,10 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rxjava3.subscribeAsState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import de.eso.weather.R
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.location.shared.LocationGrid
 import de.eso.weather.ui.location.shared.LocationTile
@@ -65,7 +67,7 @@ fun FavoriteLocationsScreenContent(
 
         item {
             AddItemTile(
-                text = "Add Location",
+                text = stringResource(id = R.string.location_add_title),
                 imageVector = Icons.Default.Add,
                 onClick = onAddLocationClicked
             )

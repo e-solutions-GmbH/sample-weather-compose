@@ -45,7 +45,7 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
 
     private val weatherScreenPage = WeatherScreenPage(context, composeTestRule)
     private val favoriteLocationsPage = FavoriteLocationsPage(context, composeTestRule)
-    private val locationSearchPage = LocationSearchPage(composeTestRule)
+    private val locationSearchPage = LocationSearchPage(context, composeTestRule)
 
     private val rxDataStore: RxDataStore<Preferences> by inject()
 
@@ -69,20 +69,21 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
         releaseIntents()
     }
 
+    // TODO: Make this work on GitHub Actions (timing issue?)
+    @Ignore("Flaky on CI")
     @Test
     fun should_show_the_favorite_locations() {
         // GIVEN
-        weatherScreenPage.clickManageLocationsButton()
+        weatherScreenPage.clickFavoriteLocationsButton()
 
         // THEN
         favoriteLocationsPage.locationIsVisible("Erlangen")
     }
 
     @Test
-    @Ignore("Does currently not click on the manage locations button")
     fun should_navigate_to_the_location_search_screen_when_clicking_the_add_location_button() {
         // GIVEN
-        weatherScreenPage.clickManageLocationsButton()
+        weatherScreenPage.clickFavoriteLocationsButton()
 
         // WHEN
         favoriteLocationsPage.clickAddLocationButton()

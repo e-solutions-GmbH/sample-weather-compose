@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,7 +59,7 @@ fun ForecastScreen(navController: NavController, viewModel: ForecastViewModel) {
         onGoToWeatherAlertsClicked = {
             navController.navigate(
                 Routes.toAlerts(
-                    checkNotNull(viewModel.forecastViewState.activeLocation?.id)
+                    checkNotEmptyForecastViewState(viewModel.forecastViewState).activeLocation.id
                 )
             )
         },
@@ -129,15 +130,17 @@ fun ForecastScreenLocationsGrid(
     onGoToWeatherAlertsClicked: () -> Unit,
     onAddLocationClicked: () -> Unit
 ) {
-    val locationHeadlineText =
-        if (activeLocationViewState.activeLocation == null) {
-            stringResource(R.string.no_location_selected)
-        } else {
-            activeLocationViewState.activeLocation.name
+    // Exclude the active location from the list of saved locations, so it is not displayed twice.
+    val savedLocationWithoutActiveLocation = remember(activeLocationViewState) {
+        savedLocationsViewState.filter {
+            it.activeLocation.id != activeLocationViewState.activeLocation.id
         }
+    }
 
-    val weatherSummary = activeLocationViewState.weather?.weather
-    val activeLocationName = activeLocationViewState.activeLocation?.name
+    val locationHeadlineText = activeLocationViewState.activeLocation.name
+
+    val weatherSummary = activeLocationViewState.weather.weather
+    val activeLocationName = activeLocationViewState.activeLocation.name
 
     val activeTileModifier = when {
         isLargeScreen -> Modifier
@@ -154,27 +157,29 @@ fun ForecastScreenLocationsGrid(
     }
 
     AdaptiveStaggeredGrid(modifier = modifier) {
-        item(span = StaggeredGridItemSpan.FullLine) {
-            ForecastScreenActiveLocationForecast(
-                locationHeadlineText = locationHeadlineText,
-                weatherSummary = weatherSummary,
-                activeLocationName = activeLocationName,
-                onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
-                modifier = activeTileModifier
-            )
+        if (activeLocationViewState != EmptyForecastViewState) {
+            item(span = StaggeredGridItemSpan.FullLine) {
+                ForecastScreenActiveLocationForecast(
+                    locationHeadlineText = locationHeadlineText,
+                    weatherSummary = weatherSummary,
+                    activeLocationName = activeLocationName,
+                    onGoToWeatherAlertsClicked = onGoToWeatherAlertsClicked,
+                    modifier = activeTileModifier
+                )
+            }
         }
 
-        items(savedLocationsViewState) {
+        items(savedLocationWithoutActiveLocation) {
             ForecastScreenSavedLocationForecast(
-                locationName = it.activeLocation?.name ?: "",
-                weatherSummary = it.weather?.weather ?: "",
+                locationName = it.activeLocation.name,
+                weatherSummary = it.weather.weather,
                 modifier = tileModifier
             )
         }
 
         item {
             AddItemTile(
-                text = "Add Location",
+                text = stringResource(id = R.string.location_add_title),
                 imageVector = Icons.Filled.Add,
                 onClick = onAddLocationClicked,
                 modifier = tileModifier
@@ -186,8 +191,8 @@ fun ForecastScreenLocationsGrid(
 @Composable
 fun ForecastScreenActiveLocationForecast(
     locationHeadlineText: String,
-    weatherSummary: String?,
-    activeLocationName: String?,
+    weatherSummary: String,
+    activeLocationName: String,
     onGoToWeatherAlertsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -207,36 +212,32 @@ fun ForecastScreenActiveLocationForecast(
         )
 
         Row(modifier = Modifier.weight(1f)) {
-            weatherSummary?.let {
-                Text(
-                    text = weatherSummary,
-                    modifier = Modifier.weight(weight = 1f),
-                    style = WeatherTheme.typography.body1
-                )
-                Icon(
-                    painter = painterResource(id = weatherIcon),
-                    contentDescription = weatherSummary,
-                    tint = WeatherTheme.colorPalette.iconTint,
-                    modifier = Modifier
-                        .weight(weight = 2f)
-                        .fillMaxHeight()
-                        .width(width = WeatherTheme.dimensions.decoratorSize)
-                        .padding(bottom = WeatherTheme.dimensions.iconPadding)
-                )
-            }
-        }
-
-        activeLocationName?.let {
-            val buttonText = "Alerts for $it"
-
-            IconAndTextButton(
-                onClick = { onGoToWeatherAlertsClicked() },
-                imageVector = Icons.Filled.Warning,
-                text = buttonText,
-                contentDescription = buttonText,
-                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+            Text(
+                text = weatherSummary,
+                modifier = Modifier.weight(weight = 1f),
+                style = WeatherTheme.typography.body1
+            )
+            Icon(
+                painter = painterResource(id = weatherIcon),
+                contentDescription = weatherSummary,
+                tint = WeatherTheme.colorPalette.iconTint,
+                modifier = Modifier
+                    .weight(weight = 2f)
+                    .fillMaxHeight()
+                    .width(width = WeatherTheme.dimensions.decoratorSize)
+                    .padding(bottom = WeatherTheme.dimensions.iconPadding)
             )
         }
+
+        val buttonText = "Alerts for $activeLocationName"
+
+        IconAndTextButton(
+            onClick = { onGoToWeatherAlertsClicked() },
+            imageVector = Icons.Filled.Warning,
+            text = buttonText,
+            contentDescription = buttonText,
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+        )
     }
 }
 
