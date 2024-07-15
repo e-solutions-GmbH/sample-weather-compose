@@ -1,8 +1,12 @@
 package de.eso.weather.domain.location.service
 
+import app.cash.turbine.test
 import de.eso.weather.Locations.AMMERNDORF
 import de.eso.weather.Locations.ZIRNDORF
 import de.eso.weather.domain.shared.api.Location
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -12,98 +16,104 @@ class LocationServiceImplTest {
     private val locationService = LocationServiceImpl()
 
     @Test
-    fun `no locations are available by default`() {
+    fun `no locations are available by default`() = runTest {
         // when
-        val testObserver = locationService.availableLocations.test()
-
-        // then
-        testObserver.assertNoValues().assertNotComplete()
+        locationService.availableLocations.test {
+            // then
+            expectNoEvents()
+        }
     }
 
     @Test
-    fun `availableLocations contains locations received by updateAvailableLocations`() {
+    fun `availableLocations contains locations received by updateAvailableLocations`() = runTest {
         // given
         val locationMocks = listOf(AMMERNDORF, ZIRNDORF)
-        locationService.updateAvailableLocations(locationMocks)
 
         // when
-        val testObserver = locationService.availableLocations.test()
+        locationService.updateAvailableLocations(locationMocks)
 
         // then
-        testObserver.assertValue(locationMocks).assertNotComplete()
+        locationService.availableLocations.test {
+            assertEquals(locationMocks, awaitItem())
+            expectNoEvents()
+        }
     }
 
     @Test
-    fun `getLocation completes when location with given id is not available`() {
+    fun `getLocation completes when location with given id is not available`() = runTest {
         // given
         val location1 = Location("location1", "1-1-1-1-1")
         val location2 = Location("location2", "2-2-2-2-2")
         val location3 = Location("location3", "3-3-3-3-3")
 
+        // when
         // > send all locations and then remove second location
         locationService.updateAvailableLocations(listOf(location1, location2, location3))
         locationService.updateAvailableLocations(listOf(location1, location3))
 
-        // when
-        val testObserver = locationService.getLocation(location2.id).test()
-
         // then
-        testObserver.assertNoValues().assertComplete()
+        locationService.getLocation(location2.id).test {
+            awaitComplete()
+        }
     }
 
     @Test
-    fun `getLocation emits location when it is available`() {
+    fun `getLocation emits location when it is available`() = runTest {
         // given
         val location1 = Location("location1", "1-1-1-1-1")
         val location2 = Location("location2", "2-2-2-2-2")
 
-        locationService.updateAvailableLocations(listOf(location1, location2))
-
         // when
-        val testObserver = locationService.getLocation(location2.id).test()
+
 
         // then
-        testObserver.assertValue(location2).assertComplete()
+        locationService.getLocation(location2.id).test {
+            locationService.updateAvailableLocations(listOf(location1, location2))
+            assertEquals(location2, awaitItem())
+            awaitComplete()
+        }
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["location", "cat", "LOCATION", " cation "])
-    fun `queryLocations searches locations correctly`(searchString: String) {
+    fun `queryLocations searches locations correctly`(searchString: String) = runTest {
         // given
         val location = Location("location", "1-1-1-1-1")
 
+        // when
         locationService.updateAvailableLocations(listOf(location))
 
-        // when
-        val testObserver = locationService.queryLocations(searchString).test()
-
         // then
-        testObserver.assertValue(listOf(location)).assertComplete()
+        locationService.queryLocations(searchString).test {
+            assertEquals(listOf(location), awaitItem())
+            awaitComplete()
+        }
     }
 
     @Test
-    fun `queryLocations emits empty result list when no matching location is found`() {
+    fun `queryLocations emits empty result list when no matching location is found`() = runTest {
         // given
         val location = Location("Location", "1-1-1-1-1")
 
+        // when
         locationService.updateAvailableLocations(listOf(location))
 
-        // when
-        val testObserver = locationService.queryLocations("frankfurt").test()
-
         // then
-        testObserver.assertValue(emptyList()).assertComplete()
+        locationService.queryLocations("frankfurt").test {
+            assertEquals(emptyList<Location>(), awaitItem())
+            awaitComplete()
+        }
     }
 
     @Test
-    fun `queryLocations emits empty result list when no locations are available`() {
+    fun `queryLocations emits empty result list when no locations are available`() = runTest {
         // given
         locationService.updateAvailableLocations(emptyList())
 
-        // when
-        val testObserver = locationService.queryLocations("location").test()
-
         // then
-        testObserver.assertValue(emptyList()).assertComplete()
+        locationService.queryLocations("location").test {
+            assertEquals(emptyList<Location>(), awaitItem())
+            awaitComplete()
+        }
     }
 }

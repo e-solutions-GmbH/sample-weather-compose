@@ -21,6 +21,7 @@ import de.eso.weather.ui.forecast.WeatherScreenPage
 import de.eso.weather.ui.location.search.LocationSearchPage
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -126,8 +127,8 @@ class FavoriteLocationsScreenIntegrationTest : KoinTest {
     }
 
     private class DummyForecastProvider : ForecastProvider {
-        override fun getCurrentWeather(location: Location): Single<WeatherTO> =
-            Single.just(WeatherTO(GOOD_WEATHER, ERLANGEN))
+        override fun getCurrentWeather(location: Location) =
+            flowOf(WeatherTO(GOOD_WEATHER, ERLANGEN))
     }
 
     private companion object {

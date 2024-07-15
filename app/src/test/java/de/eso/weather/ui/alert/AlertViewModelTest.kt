@@ -1,5 +1,6 @@
 package de.eso.weather.ui.alert
 
+import app.cash.turbine.test
 import de.eso.weather.InstantTaskExecutorExtension
 import de.eso.weather.domain.alert.api.WeatherAlertService
 import de.eso.weather.domain.alert.api.WeatherAlertTO
@@ -10,6 +11,9 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable.just
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -23,18 +27,19 @@ class AlertViewModelTest {
     private lateinit var locationService: LocationService
 
     @Test
-    fun `Should emit the weather alerts from its weather alert provider`() {
+    fun `Should emit the weather alerts from its weather alert provider`() = runTest {
         // GIVEN
-        every { locationService.getLocation(ERLANGEN.id) } returns Maybe.just(ERLANGEN)
-        every { weatherAlertService.getWeatherAlerts(any()) } returns just(listOf(ALERT_TO))
-
-        val alertViewModel = createViewModel()
+        every { locationService.getLocation(ERLANGEN.id) } returns flowOf(ERLANGEN)
+        every { weatherAlertService.getWeatherAlerts(any()) } returns flowOf(listOf(ALERT_TO))
 
         // WHEN
-        val testObserver = alertViewModel.weatherAlerts.test()
+        val alertViewModel = createViewModel()
 
         // THEN
-        testObserver.assertValue(listOf(AlertListItem(ALERT_TO)))
+       alertViewModel.weatherAlerts.test {
+            assertEquals(listOf(AlertListItem(ALERT_TO)), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     private fun createViewModel() =

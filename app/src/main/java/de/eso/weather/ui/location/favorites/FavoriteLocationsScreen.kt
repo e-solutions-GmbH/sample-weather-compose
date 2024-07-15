@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import de.eso.weather.R
 import de.eso.weather.domain.shared.api.Location
@@ -39,7 +40,7 @@ fun FavoriteLocationsScreen(
         navController.popBackStack()
     }
 
-    val locations by viewModel.locations.subscribeAsState(emptyList())
+    val locations by viewModel.locations.collectAsStateWithLifecycle(emptyList())
     FavoriteLocationsScreenContent(
         locations = locations,
         onLocationSelected = viewModel::onLocationSelected,

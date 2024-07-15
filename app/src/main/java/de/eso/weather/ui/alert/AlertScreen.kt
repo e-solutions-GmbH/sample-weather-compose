@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.eso.weather.R
 import de.eso.weather.domain.alert.api.WeatherAlertTO
 import de.eso.weather.domain.shared.api.Location
@@ -31,8 +32,8 @@ import de.eso.weather.ui.shared.compose.components.Tile
 
 @Composable
 fun AlertScreen(viewModel: AlertViewModel) {
-    val location by viewModel.location.subscribeAsState(null)
-    val alerts by viewModel.weatherAlerts.subscribeAsState(initial = emptyList())
+    val location by viewModel.location.collectAsStateWithLifecycle(null)
+    val alerts by viewModel.weatherAlerts.collectAsStateWithLifecycle(emptyList())
 
     AlertScreenContent(
         location = location,

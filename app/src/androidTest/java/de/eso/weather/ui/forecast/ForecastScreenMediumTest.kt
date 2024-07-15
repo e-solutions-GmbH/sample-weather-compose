@@ -9,6 +9,7 @@ import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.ui.WeatherActivity
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -26,7 +27,7 @@ class ForecastScreenMediumTest: KoinTest {
 
     private class DummyForecastProvider : ForecastProvider {
         override fun getCurrentWeather(location: Location) =
-            Single.just(WeatherTO(GOOD_WEATHER, ERLANGEN))
+            flowOf(WeatherTO(GOOD_WEATHER, ERLANGEN))
     }
 
     private val forecastViewModel: ForecastViewModel by inject()

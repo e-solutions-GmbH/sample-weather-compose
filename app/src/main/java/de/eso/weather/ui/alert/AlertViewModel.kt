@@ -5,6 +5,10 @@ import de.eso.weather.domain.alert.api.WeatherAlertService
 import de.eso.weather.domain.location.api.LocationService
 import de.eso.weather.domain.shared.api.Location
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 
 class AlertViewModel(
     weatherAlertService: WeatherAlertService,
@@ -12,12 +16,14 @@ class AlertViewModel(
     locationId: String
 ) : ViewModel() {
 
-    val location: Observable<Location> = locationService.getLocation(locationId).toObservable()
+    val location: Flow<Location> = locationService.getLocation(locationId)
 
-    val weatherAlerts: Observable<List<AlertListItem>> = location
-        .switchMap {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val weatherAlerts: Flow<List<AlertListItem>> =
+        locationService.getLocation(locationId).flatMapLatest {
             weatherAlertService
                 .getWeatherAlerts(it)
                 .map { alerts -> alerts.map { alert -> AlertListItem(alert) } }
         }
+
 }
