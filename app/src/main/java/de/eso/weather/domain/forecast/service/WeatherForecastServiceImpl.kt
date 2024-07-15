@@ -4,31 +4,48 @@ import android.util.Log
 import de.eso.weather.domain.forecast.api.WeatherForecastService
 import de.eso.weather.domain.forecast.api.WeatherTO
 import de.eso.weather.domain.shared.api.Location
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
-import java.util.concurrent.TimeUnit.SECONDS
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
+import kotlin.time.Duration.Companion.seconds
 
 class WeatherForecastServiceImpl(
-    scheduler: Scheduler,
-    private val forecastProvider: ForecastProvider
+    private val forecastProvider: ForecastProvider,
+    private val scope: CoroutineScope = MainScope()
 ) : WeatherForecastService {
 
-    private val timer = Observable
-        .interval(0, TIMER_INTERVAL_SECONDS, SECONDS, scheduler)
-        .share()
+    private val timer = flow {
+        while(true) {
+            delay(TIMER_INTERVAL_SECONDS)
+            emit(null)
+        }
+    }
+        .conflate()
+        .shareIn(scope, SharingStarted.WhileSubscribed(0,0), 0)
 
-    private val locationObservables = mutableMapOf<Location, Observable<WeatherTO>>()
+    private val locationFlows = mutableMapOf<Location, Flow<WeatherTO>>()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getWeather(location: Location) =
-        locationObservables.computeIfAbsent(location) {
-            timer
-                .switchMapSingle { forecastProvider.getCurrentWeather(location) }
-                .doOnNext { Log.i("Weather", "[Thread: ${Thread.currentThread()}] Update Weather for $location is: $it") }
-                .share()
-                .doOnDispose { locationObservables.remove(location) }
+        locationFlows.computeIfAbsent(location) {
+            timer.flatMapLatest { forecastProvider.getCurrentWeather(location) }
+                .onEach {
+                    Log.i("Weather", "[Thread: ${Thread.currentThread()}] Update Weather for $location is: $it")
+                }
+                .shareIn(scope, SharingStarted.WhileSubscribed(), 1)
         }
 
     companion object {
-        private const val TIMER_INTERVAL_SECONDS: Long = 3
+        private const val TIMER_INTERVAL_SECONDS = 3000L
     }
 }

@@ -3,15 +3,24 @@ package de.eso.weather.domain.alert.platform
 import de.eso.weather.domain.alert.api.WeatherAlertTO
 import de.eso.weather.domain.shared.api.Location
 import de.eso.weather.domain.shared.platform.Locations
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Scheduler
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
-class WeatherAlertProvider(private val scheduler: Scheduler, private val randomBoolSupplier: RandomBooleanSupplier) : AlertProvider {
+class WeatherAlertProvider(private val randomBoolSupplier: RandomBooleanSupplier, private val scope: CoroutineScope,) : AlertProvider {
+    val _alerts = MutableSharedFlow<List<WeatherAlertTO>>()
+    override val alerts = _alerts.asSharedFlow()
 
-    override fun alerts(): Observable<List<WeatherAlertTO>> =
-        Observable.interval(UPDATE_INTERVAL_SECONDS, TimeUnit.SECONDS, scheduler)
-            .map { Locations.knownLocations.flatMap { location -> getAlertsForSingleLocation(location) } }
+    init {
+        scope.launch {
+            while(true) {
+                delay(UPDATE_INTERVAL_SECONDS)
+                _alerts.emit(Locations.knownLocations.flatMap { location -> getAlertsForSingleLocation(location) })
+            }
+        }
+    }
 
     private fun getAlertsForSingleLocation(location: Location): List<WeatherAlertTO> =
         possibleAlerts

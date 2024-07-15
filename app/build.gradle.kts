@@ -70,7 +70,7 @@ val koinVersion = "2.2.3"
 val moshiVersion = "1.13.0"
 
 val mockkVersion = "1.12.0"
-val jupiterVersion = "5.7.2"
+val jupiterVersion = "5.10.3"
 val assertjVersion = "3.18.1"
 
 // Main Dependencies
@@ -81,7 +81,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose-android:$lifecycleVersion")
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
@@ -128,6 +128,8 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+    testImplementation("app.cash.turbine:turbine:1.1.0")
 
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
@@ -139,17 +141,17 @@ dependencies {
 
 // androidTest Dependencies
 dependencies {
-    androidTestImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.2.1")
     androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation("org.assertj:assertj-core:$assertjVersion")
 
     androidTestImplementation("io.insert-koin:koin-test:$koinVersion")
 
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestUtil("androidx.test:orchestrator:1.4.2")
+    androidTestImplementation("androidx.test:runner:1.6.1")
+    androidTestUtil("androidx.test:orchestrator:1.5.0")
 
     // Compose
     androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))

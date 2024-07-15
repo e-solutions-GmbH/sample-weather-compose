@@ -4,11 +4,12 @@ import de.eso.weather.domain.shared.api.Location
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
 
 interface LocationService {
-    val availableLocations: Observable<List<Location>>
+    val availableLocations: Flow<List<Location>>
 
-    fun getLocation(id: String): Maybe<Location>
+    fun getLocation(id: String): Flow<Location>
 
-    fun queryLocations(locationName: String): Single<List<Location>>
+    fun queryLocations(locationName: String): Flow<List<Location>>
 }

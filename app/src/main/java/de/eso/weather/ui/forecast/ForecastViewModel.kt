@@ -4,74 +4,68 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import de.eso.weather.domain.forecast.api.WeatherForecastService
 import de.eso.weather.domain.location.api.FavoriteLocationsRepository
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import java.util.Optional
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ForecastViewModel(
     private val weatherForecastService: WeatherForecastService,
-    favoriteLocationsRepository: FavoriteLocationsRepository,
-    mainScheduler: Scheduler = AndroidSchedulers.mainThread()
+    favoriteLocationsRepository: FavoriteLocationsRepository
 ) : ViewModel() {
     var forecastViewState by mutableStateOf(EmptyForecastViewState)
     var forecastSavedLocationsViewState by mutableStateOf<List<ForecastViewState>>(emptyList())
 
-    private val disposables = CompositeDisposable()
-
     init {
-        favoriteLocationsRepository
-            .activeLocation
-            .switchMap { location ->
-                if (!location.isPresent) {
-                    Observable.just(EmptyForecastViewState)
-                } else {
-                    weatherForecastService
-                        .getWeather(location.get())
-                        .map { weatherTO -> ForecastViewState(location.get(), weatherTO) }
+        viewModelScope.launch {
+            favoriteLocationsRepository
+                .activeLocation
+                .flatMapLatest { location ->
+                    if (!location.isPresent) {
+                        flowOf(EmptyForecastViewState)
+                    } else {
+                        weatherForecastService
+                            .getWeather(location.get())
+                            .map { weatherTO -> ForecastViewState(location.get(), weatherTO) }
+                    }
                 }
-            }
-            .filter { it != EmptyForecastViewState }
-            .observeOn(mainScheduler)
-            .subscribe {
-                forecastViewState = it
-            }
-            .addTo(disposables)
+                .filter { it != EmptyForecastViewState }
+                //.flowOn(mainScheduler)
+                .collect {
+                    forecastViewState = it
+                }
+            favoriteLocationsRepository.activeLocation.onStart { emit(Optional.empty()) }
+                .combine(favoriteLocationsRepository.savedLocations) { activeLocation, savedLocations ->
+                    if (activeLocation.isPresent) {
+                        savedLocations - activeLocation.get()
+                    } else {
+                        savedLocations
+                    }
+                }
+                .flatMapLatest { locations ->
+                    val weatherForLocations = locations.map { location ->
+                        weatherForecastService
+                            .getWeather(location)
+                            .map { weatherTO -> ForecastViewState(location, weatherTO) }
+                    }
 
-        Observable.combineLatest(
-            favoriteLocationsRepository.activeLocation.startWith(Observable.just(Optional.empty())),
-            favoriteLocationsRepository.savedLocations
-        ) { activeLocation, savedLocations ->
-            if (activeLocation.isPresent) {
-                savedLocations - activeLocation.get()
-            } else {
-                savedLocations
-            }
+                    combine(weatherForLocations) { it }
+                }
+                //.observeOn(mainScheduler)
+                .collect {
+                    forecastSavedLocationsViewState = it.asList()
+                }
         }
-            .switchMap { locations ->
-                val weatherForLocations = locations.map { location ->
-                    weatherForecastService
-                        .getWeather(location)
-                        .map { weatherTO -> ForecastViewState(location, weatherTO) }
-                }.toTypedArray()
-
-                Observable.combineLatestArray(weatherForLocations) {
-                    it.toList() as List<ForecastViewState>
-                }
-            }
-            .observeOn(mainScheduler)
-            .subscribe {
-                forecastSavedLocationsViewState = it
-            }
-            .addTo(disposables)
-    }
-
-    override fun onCleared() {
-        disposables.dispose()
     }
 }

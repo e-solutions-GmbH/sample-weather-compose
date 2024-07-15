@@ -21,8 +21,8 @@ class LiveDataTestObserver<T> : Observer<T> {
     val values: List<T>
         get() = _values.toList()
 
-    override fun onChanged(t: T) {
-        _values.add(t)
+    override fun onChanged(value: T) {
+        _values.add(value)
     }
 
     /** Assert that this LiveDataTestObserver has not received any values. */

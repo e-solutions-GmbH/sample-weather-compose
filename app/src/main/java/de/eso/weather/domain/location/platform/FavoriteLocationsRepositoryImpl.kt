@@ -15,6 +15,11 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import java.util.Optional
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -33,8 +38,8 @@ class FavoriteLocationsRepositoryImpl(
     private val locationListAdapter: JsonAdapter<List<Location>> =
         moshi.adapter(Types.newParameterizedType(List::class.java, Location::class.java))
 
-    private val savedLocationsSubject = BehaviorSubject.createDefault<List<Location>>(emptyList())
-    private val activeLocationSubject = BehaviorSubject.createDefault(OptionalLocation())
+    private val savedLocationsSubject = MutableStateFlow<List<Location>>(emptyList())
+    private val activeLocationSubject = MutableStateFlow(OptionalLocation())
 
     init {
         preferenceStore
@@ -47,7 +52,7 @@ class FavoriteLocationsRepositoryImpl(
                     locationListAdapter.fromJson(serializedLocations) ?: emptyList()
                 }
             }.subscribe {
-                savedLocationsSubject.onNext(it)
+                savedLocationsSubject.tryEmit(it)
             }
 
         preferenceStore
@@ -62,21 +67,21 @@ class FavoriteLocationsRepositoryImpl(
                         .let { OptionalLocation(it) }
                 }
             }.subscribe {
-                activeLocationSubject.onNext(it)
+                activeLocationSubject.tryEmit(it)
             }
     }
 
-    override val savedLocations: Observable<List<Location>> = savedLocationsSubject.hide()
+    override val savedLocations = savedLocationsSubject.asStateFlow()
 
-    override val activeLocation: Observable<Optional<Location>> =
+    override val activeLocation =
         activeLocationSubject
+            .asStateFlow()
             .map { optionalLocation -> Optional.ofNullable(optionalLocation.value) }
-            .hide()
 
     override fun saveLocation(location: Location) {
         preferenceStore
             .updateDataAsync { preferences: Preferences ->
-                val currentLocations: List<Location> = savedLocationsSubject.value ?: emptyList()
+                val currentLocations: List<Location> = savedLocationsSubject.value
 
                 if (location !in currentLocations) {
                     val updatedLocations: List<Location> = currentLocations.plus(location)
@@ -98,7 +103,7 @@ class FavoriteLocationsRepositoryImpl(
     override fun deleteLocation(location: Location) {
         preferenceStore
             .updateDataAsync { preferences ->
-                val currentLocations: List<Location> = savedLocationsSubject.value ?: emptyList()
+                val currentLocations: List<Location> = savedLocationsSubject.value
                 if (location in currentLocations) {
                     val updatedLocations: List<Location> = currentLocations.minus(location)
 

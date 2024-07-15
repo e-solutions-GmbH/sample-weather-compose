@@ -1,5 +1,6 @@
 package de.eso.weather.ui.forecast
 
+import de.eso.weather.CoroutineMainDispatcherExtension
 import de.eso.weather.InstantTaskExecutorExtension
 import de.eso.weather.Locations.ERLANGEN
 import de.eso.weather.domain.forecast.api.WeatherForecastService
@@ -10,20 +11,21 @@ import de.eso.weather.domain.shared.platform.Locations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observable.just
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 
-@ExtendWith(MockKExtension::class, InstantTaskExecutorExtension::class)
+@ExtendWith(MockKExtension::class, InstantTaskExecutorExtension::class, CoroutineMainDispatcherExtension::class)
 class ForecastViewModelTest {
-
-    private val testScheduler = Schedulers.trampoline()
-
     @MockK
     private lateinit var weatherForecastService: WeatherForecastService
 
@@ -45,7 +47,7 @@ class ForecastViewModelTest {
     fun `Should emit the weather from its weather provider`() {
         // GIVEN
         setupActiveLocation()
-        every { weatherForecastService.getWeather(any()) } returns just(WEATHER_IN_ERLANGEN)
+        every { weatherForecastService.getWeather(any()) } returns flowOf(WEATHER_IN_ERLANGEN)
 
         // WHEN
         createViewModel()
@@ -60,20 +62,20 @@ class ForecastViewModelTest {
     }
 
     private fun setupAvailableLocations() {
-        every { locationService.availableLocations } returns just(listOf(ERLANGEN))
+        every { locationService.availableLocations } returns flowOf(listOf(ERLANGEN))
     }
 
     private fun setupActiveLocation() {
-        every { favoriteLocationsRepository.activeLocation } returns just(Optional.of(ERLANGEN))
+        every { favoriteLocationsRepository.activeLocation } returns flowOf(Optional.of(ERLANGEN))
     }
 
     private fun setupSavedLocations() {
-        every { favoriteLocationsRepository.savedLocations } returns just(Locations.knownLocations)
+        every { favoriteLocationsRepository.savedLocations } returns flowOf(Locations.knownLocations)
     }
 
     private fun createViewModel() {
         forecastViewModel =
-            ForecastViewModel(weatherForecastService, favoriteLocationsRepository, testScheduler)
+            ForecastViewModel(weatherForecastService, favoriteLocationsRepository)
     }
 
     private companion object {

@@ -4,26 +4,28 @@ import android.util.Log
 import de.eso.weather.domain.alert.api.WeatherAlertService
 import de.eso.weather.domain.alert.api.WeatherAlertTO
 import de.eso.weather.domain.shared.api.Location
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.Subject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 class WeatherAlertServiceImpl : WeatherAlertService, AlertReceiver {
 
-    private val currentAlerts: Subject<List<WeatherAlertTO>> =
-        BehaviorSubject.createDefault(emptyList())
+    private val currentAlerts = MutableStateFlow(emptyList<WeatherAlertTO>())
 
     init {
         Log.i("Weather", "WeatherAlertService started")
     }
 
-    override fun getWeatherAlerts(location: Location): Observable<List<WeatherAlertTO>> =
+    override fun getWeatherAlerts(location: Location): Flow<List<WeatherAlertTO>> =
         currentAlerts
             .map { it.filter { alert -> alert.location == location } }
             .distinctUntilChanged()
-            .doAfterNext { Log.i("Weather", "Weather Alerts for $location are: $it") }
+            .onEach { Log.i("Weather", "Weather Alerts for $location are: $it") }
 
     override fun updateAlerts(alerts: List<WeatherAlertTO>) {
-        currentAlerts.onNext(alerts)
+        currentAlerts.tryEmit(alerts)
     }
 }
