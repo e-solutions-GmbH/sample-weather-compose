@@ -86,6 +86,7 @@ fun ThemeSelectionScreen(
 fun SizeScaling(onSizeSelected: (Float) -> Unit) {
     val initialScale = LocalDimensions.current.scale
     var size by remember { mutableStateOf(initialScale) }
+    var interactionSource = remember { MutableInteractionSource() }
 
     Column {
         Text("Zoom: ${(size * 100).toInt()} %")
@@ -99,7 +100,7 @@ fun SizeScaling(onSizeSelected: (Float) -> Unit) {
             onValueChangeFinished = {
                 onSizeSelected(size)
             },
-            interactionSource = MutableInteractionSource()
+            interactionSource = interactionSource
         )
     }
 }
