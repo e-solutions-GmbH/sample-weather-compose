@@ -3,14 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeCompilerVersion = "1.4.7"
-val composeBomVersion = "2023.05.01"
+val composeCompilerVersion = "1.5.14"
+val composeBomVersion = "2024.06.00"
 
 android {
     defaultConfig {
         minSdk = 26
-        compileSdk = 33
-        targetSdk = 33
+        compileSdk = 34
+        targetSdk = 34
         applicationId = "de.eso.weather.compose"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["coverage"] = "true"
@@ -21,8 +21,8 @@ android {
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
 
         composeOptions {
@@ -30,7 +30,7 @@ android {
         }
 
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "17"
         }
 
         testOptions {
@@ -56,15 +56,15 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     namespace = "de.eso.weather"
     testNamespace = "de.eso.weather.test"
 }
 
-val lifecycleVersion = "2.4.1"
-val navigationVersion = "2.4.2"
+val lifecycleVersion = "2.8.3"
+val navigationVersion = "2.7.7"
 
 val koinVersion = "2.2.3"
 val moshiVersion = "1.13.0"
@@ -75,11 +75,12 @@ val assertjVersion = "3.18.1"
 
 // Main Dependencies
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.core:core-ktx:1.13.1")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
@@ -105,9 +106,9 @@ dependencies {
     // ConstraintLayout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
 
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-scope:$koinVersion")
@@ -115,7 +116,7 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-fragment:$koinVersion")
 
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
 
     implementation("com.squareup.moshi:moshi:$moshiVersion")
     implementation("com.squareup.moshi:moshi-adapters:$moshiVersion")
