@@ -3,15 +3,15 @@ import pl.droidsonroids.gradle.pitest.PitestPlugin.PITEST_CONFIGURATION_NAME
 import pl.droidsonroids.gradle.pitest.PitestPluginExtension
 
 plugins {
-    id("com.android.application") version "8.2.2" apply false
-    id("com.android.library") version "8.2.2" apply false
+    id("com.android.application") version "8.4.2" apply false
+    id("com.android.library") version "8.4.2" apply false
     id("org.jetbrains.kotlin.android") version "1.9.24" apply false
-    id("pl.droidsonroids.pitest") version "0.2.12" apply false
+    id("pl.droidsonroids.pitest") version "0.2.18" apply false
 }
 
 buildscript {
     dependencies {
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.8.3")
     }
 }
 
@@ -26,14 +26,15 @@ subprojects {
     buildscript {
         dependencies.add(
             PITEST_CONFIGURATION_NAME,
-            "com.groupcdg.pitest:pitest-kotlin-plugin:1.1.3"
+            "com.groupcdg.pitest:pitest-kotlin-plugin:1.3.0"
         )
         dependencies.add(
             PITEST_CONFIGURATION_NAME,
-            "com.groupcdg.pitest:pitest-accelerator-junit5:1.0.6"
+            "com.groupcdg.pitest:pitest-accelerator-junit5:1.2.0"
         )
-        dependencies.add(PITEST_CONFIGURATION_NAME, "com.groupcdg.arcmutate:base:1.2.2")
-        dependencies.add(PITEST_CONFIGURATION_NAME, "com.groupcdg:pitest-git-plugin:1.1.2")
+        dependencies.add(PITEST_CONFIGURATION_NAME, "com.arcmutate:android:0.0.1")
+        dependencies.add(PITEST_CONFIGURATION_NAME, "com.groupcdg.arcmutate:base:1.3.1")
+        dependencies.add(PITEST_CONFIGURATION_NAME, "com.groupcdg:pitest-git-plugin:1.3.3")
     }
 
     extensions.findByType<PitestPluginExtension>()?.apply {
@@ -42,7 +43,7 @@ subprojects {
             targetTests.set(targets.map { "${it}Test" })
         }
         junit5PluginVersion.set("1.0.0")
-        pitestVersion.set("1.15.1")
+        pitestVersion.set("1.17.0")
         mutators.set(setOf("STRONGER", "EXTENDED"))
     }
 }

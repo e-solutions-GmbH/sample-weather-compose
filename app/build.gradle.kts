@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeCompilerVersion = "1.5.14"
-val composeBomVersion = "2024.06.00"
+val composeCompilerVersion = "1.5.15"
+val composeBomVersion = "2024.10.00"
 
 android {
     defaultConfig {
@@ -38,6 +38,7 @@ android {
             execution = "ANDROIDX_TEST_ORCHESTRATOR"
             animationsDisabled = true
             unitTests.isReturnDefaultValues = true
+            unitTests.isIncludeAndroidResources = true
         }
 
         buildTypes {
@@ -64,14 +65,14 @@ android {
     testNamespace = "de.eso.weather.test"
 }
 
-val lifecycleVersion = "2.8.3"
-val navigationVersion = "2.7.7"
+val lifecycleVersion = "2.8.6"
+val navigationVersion = "2.8.3"
 
 val koinVersion = "2.2.3"
 val moshiVersion = "1.13.0"
 
 val mockkVersion = "1.12.0"
-val jupiterVersion = "5.7.2"
+val jupiterVersion = "5.10.3"
 val assertjVersion = "3.18.1"
 
 // Main Dependencies
@@ -107,7 +108,7 @@ dependencies {
     // ConstraintLayout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.navigation:navigation-compose:2.8.3")
 
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
 
@@ -137,21 +138,28 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.13")
+    // Compose
+    testImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
 
 // androidTest Dependencies
 dependencies {
-    androidTestImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.2.1")
     androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation("org.assertj:assertj-core:$assertjVersion")
 
     androidTestImplementation("io.insert-koin:koin-test:$koinVersion")
 
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestUtil("androidx.test:orchestrator:1.4.2")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestUtil("androidx.test:orchestrator:1.5.1")
 
     // Compose
     androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
