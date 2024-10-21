@@ -145,6 +145,7 @@ dependencies {
     testImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     testImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("androidx.fragment:fragment-testing:1.8.4")
 }
 
 // androidTest Dependencies

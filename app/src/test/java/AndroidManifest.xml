@@ -10,4 +10,10 @@
         android:forceQueryable="true" />
     <!-- forceQueryable is needed because Android 11 changed the package visibility. Without this,
     the Android Test Orchestrator might not find the test APK. -->
+    <activity
+        android:name="androidx.activity.ComponentActivity"
+        android:exported="false"
+        />
+
+
 </manifest>
