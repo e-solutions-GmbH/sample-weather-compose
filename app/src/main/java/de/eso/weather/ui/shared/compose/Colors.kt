@@ -1,6 +1,7 @@
 package de.eso.weather.ui.shared.compose
 
-import androidx.compose.material.Colors
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
@@ -18,20 +19,17 @@ object EsoColors {
     val White = Color.White
 }
 
-val DefaultColors = Colors(
+val DefaultColors = darkColorScheme(
     primary = EsoColors.Blue,
-    primaryVariant = EsoColors.Blue,
-    secondary = EsoColors.Blue,
-    secondaryVariant = EsoColors.Blue,
-    background = EsoColors.Black,
-    surface = EsoColors.Black,
-    error = EsoColors.Blue,
     onPrimary = EsoColors.White,
+    secondary = EsoColors.Blue,
     onSecondary = EsoColors.White,
+    background = EsoColors.Black,
     onBackground = EsoColors.White,
+    surface = EsoColors.Black,
     onSurface = EsoColors.White,
-    onError = EsoColors.Red,
-    isLight = false
+    error = EsoColors.Red,
+    onError = EsoColors.White
 )
 
 object ColorPalettes {
@@ -60,13 +58,13 @@ data class ColorPalette(
     val iconTint: Color = EsoColors.Orange,
     private val color: Color
 ) {
-    val colors: Colors
+    val colorScheme: ColorScheme
         get() {
             return DefaultColors.copy(
                 primary = color.dark,
-                primaryVariant = color.darkest,
+                primaryContainer = color.darkest,
                 secondary = color,
-                secondaryVariant = color.darker,
+                secondaryContainer = color.darker,
                 background = color.dark.copy(alpha = 0.3f)
             )
         }

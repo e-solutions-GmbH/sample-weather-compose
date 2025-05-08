@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdk = 26
         compileSdk = 34
-        targetSdk = 34
+        targetSdk = 35
         applicationId = "de.eso.weather.compose"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["coverage"] = "true"

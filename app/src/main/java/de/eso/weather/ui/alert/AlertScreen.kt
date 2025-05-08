@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rxjava3.subscribeAsState
@@ -62,7 +62,7 @@ fun AlertScreenContent(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = text,
-            style = WeatherTheme.typography.h6
+            style = WeatherTheme.typography.headlineMedium
         )
 
         if (hasAlerts) {
@@ -154,7 +154,7 @@ fun AlertTile(
         }
         Text(
             text = alertListItem.alert.alert,
-            style = WeatherTheme.typography.subtitle1,
+            style = WeatherTheme.typography.bodyMedium,
             modifier = Modifier
         )
     }
