@@ -1,0 +1,65 @@
+[versions]
+composeCompiler = "1.5.14"
+composeBom = "2024.06.00"
+lifecycle = "2.8.3"
+navigation = "2.7.7"
+koin = "2.2.3"
+moshi = "1.13.0"
+mockk = "1.12.0"
+jupiter = "5.7.2"
+assertj = "3.18.1"
+rxkotlin = "3.0.1"
+rxandroid = "3.0.2"
+datastore = "1.1.1"
+constraintlayoutCompose = "1.0.1"
+espresso = "3.5.1"
+testRunner = "1.5.2"
+orchestrator = "1.4.2"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
+coreKtx = { module = "androidx.core:core-ktx", version = "1.13.1" }
+lifecycleViewModelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycleLiveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+lifecycleReactiveStreamsKtx = { module = "androidx.lifecycle:lifecycle-reactivestreams-ktx", version.ref = "lifecycle" }
+navigationFragmentKtx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+navigationUiKtx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
+composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+composeCompiler = { module = "androidx.compose.compiler:compiler", version.ref = "composeCompiler" }
+composeUi = { module = "androidx.compose.ui:ui" }
+composeUiTooling = { module = "androidx.compose.ui:ui-tooling" }
+composeFoundation = { module = "androidx.compose.foundation:foundation" }
+composeMaterial = { module = "androidx.compose.material:material" }
+composeMaterialIconsCore = { module = "androidx.compose.material:material-icons-core" }
+composeMaterialIconsExtended = { module = "androidx.compose.material:material-icons-extended" }
+composeRuntimeLiveData = { module = "androidx.compose.runtime:runtime-livedata" }
+composeRuntimeRxJava3 = { module = "androidx.compose.runtime:runtime-rxjava3" }
+constraintlayoutCompose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+datastorePreferencesRxJava3 = { module = "androidx.datastore:datastore-preferences-rxjava3", version.ref = "datastore" }
+koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koinAndroidScope = { module = "io.insert-koin:koin-androidx-scope", version.ref = "koin" }
+koinAndroidViewModel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koin" }
+koinAndroidFragment = { module = "io.insert-koin:koin-androidx-fragment", version.ref = "koin" }
+rxKotlin = { module = "io.reactivex.rxjava3:rxkotlin", version.ref = "rxkotlin" }
+rxAndroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshiAdapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi" }
+moshiKotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
+coreTesting = { module = "androidx.arch.core:core-testing", version = "2.2.0" }
+assertjCore = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+koinTest = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koinTestJunit5 = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin" }
+junitJupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
+junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jupiter" }
+junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter" }
+androidTestCore = { module = "androidx.test:core", version = "1.5.0" }
+espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+espressoIntents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso" }
+androidTestExtJunitKtx = { module = "androidx.test.ext:junit-ktx", version = "1.1.5" }
+mockkAndroid = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+androidTestRunner = { module = "androidx.test:runner", version.ref = "testRunner" }
+androidTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "orchestrator" }
+composeUiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+composeUiTestManifest = { module = "androidx.compose.ui:ui-test-manifest" }
