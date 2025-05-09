@@ -1,9 +1,10 @@
 package de.eso.weather.ui.shared.compose
 
 import android.content.res.Configuration.SCREENLAYOUT_SIZE_LARGE
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
-import androidx.compose.material.Typography
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -39,14 +40,14 @@ object WeatherTheme {
     @Composable
     fun createTypography(fontStyle: FontStyle): Typography {
         return Typography(
-            defaultFontFamily = fontStyle.defaultFontFamily,
-            h4 = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.headerTextSize),
-            h6 = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.titleTextSize),
-            subtitle1 = TextStyle(fontSize = dimensions.subTitleTextSize, color = fontStyle.contentColor),
-            body1 = TextStyle(fontSize = dimensions.body1TextSize, color = fontStyle.contentColor),
-            body2 = TextStyle(fontSize = dimensions.body2TextSize, color = fontStyle.contentColor),
-            button = TextStyle(fontSize = dimensions.buttonTextSize, color = fontStyle.contentColor),
-            caption = TextStyle(fontSize = dimensions.captionTextSize, color = fontStyle.contentColor)
+            displayLarge = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.headerTextSize),
+            titleLarge = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.headerTextSize),
+            headlineMedium = TextStyle(fontFamily = fontStyle.headlineFontFamily, color = fontStyle.headerColor, fontSize = dimensions.titleTextSize),
+            titleMedium = TextStyle(fontSize = dimensions.subTitleTextSize, color = fontStyle.contentColor),
+            bodyLarge = TextStyle(fontSize = dimensions.body1TextSize, color = fontStyle.contentColor),
+            bodyMedium = TextStyle(fontSize = dimensions.body2TextSize, color = fontStyle.contentColor),
+            labelLarge = TextStyle(fontSize = dimensions.buttonTextSize, color = fontStyle.contentColor),
+            labelSmall = TextStyle(fontSize = dimensions.captionTextSize, color = fontStyle.contentColor)
         )
     }
 }
@@ -90,6 +91,8 @@ fun WeatherTheme(
         Dimensions.Phone
     }
 
+    val colors = darkColorScheme().copy()
+
     CompositionLocalProvider(
         LocalScreenSize provides screenSize,
         LocalColorPalette provides colorPalette,
@@ -97,7 +100,7 @@ fun WeatherTheme(
     ) {
         MaterialTheme(
             content = content,
-            colors = colorPalette.colors,
+            colorScheme = colorPalette.colorScheme,
             typography = WeatherTheme.createTypography(fontStyle)
         )
     }

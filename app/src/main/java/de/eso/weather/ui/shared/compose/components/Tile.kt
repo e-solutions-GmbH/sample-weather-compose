@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -28,8 +28,8 @@ import de.eso.weather.ui.shared.compose.WeatherTheme
 @Composable
 fun Tile(
     modifier: Modifier = Modifier,
-    borderColor: Color = WeatherTheme.colorPalette.colors.onSecondary,
-    backgroundColor: Color = WeatherTheme.colorPalette.colors.secondaryVariant,
+    borderColor: Color = WeatherTheme.colorPalette.colorScheme.onSecondary,
+    backgroundColor: Color = WeatherTheme.colorPalette.colorScheme.secondaryContainer,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable (ColumnScope.() -> Unit)
@@ -63,8 +63,8 @@ fun AddItemTile(
             .height(height = WeatherTheme.dimensions.tileSizeSmall)
             .clickable(role = Role.Button) { onClick() },
         verticalArrangement = Arrangement.Center,
-        borderColor = WeatherTheme.colorPalette.colors.onPrimary,
-        backgroundColor = WeatherTheme.colorPalette.colors.primaryVariant
+        borderColor = WeatherTheme.colorPalette.colorScheme.onPrimary,
+        backgroundColor = WeatherTheme.colorPalette.colorScheme.primaryContainer
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(

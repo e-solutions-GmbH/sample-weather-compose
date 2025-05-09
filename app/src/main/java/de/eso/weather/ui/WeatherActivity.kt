@@ -9,30 +9,39 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.NavigationRail
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -54,6 +63,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -82,7 +92,6 @@ import de.eso.weather.ui.shared.compose.LocalScreenSize
 import de.eso.weather.ui.shared.compose.ScreenSize
 import de.eso.weather.ui.shared.compose.WeatherTheme
 import de.eso.weather.ui.shared.compose.components.GridBackground
-import de.eso.weather.ui.shared.compose.scale
 import de.eso.weather.ui.themeselection.ThemeSelectionScreen
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -103,6 +112,7 @@ class WeatherActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
     fun WeatherApp() {
@@ -134,96 +144,108 @@ class WeatherActivity : AppCompatActivity() {
             colorPalette = activeColorPalette,
             dimensionScale = activeDimensionScale
         ) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        backgroundColor = WeatherTheme.colorPalette.colors.primary,
-                        title = { Headline(currentScreenName) },
-                        navigationIcon = if (showBackButton) {
-                            {
-                                IconButton(onClick = { navController.popBackStack() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        tint = WeatherTheme.colorPalette.iconTint,
-                                        contentDescription = "backIcon"
-                                    )
-                                }
-                            }
-                        } else {
-                            null
-                        },
-                        modifier = Modifier.height(height = WeatherTheme.dimensions.titleBarHeight)
-                    )
-                },
-                bottomBar = {
-                    if (!WeatherTheme.isLargeScreen()) {
-                        EsoBottomNavigation(Modifier.layoutId("navigation"), navController)
-                    }
-                }
-            ) { contentPadding ->
-                val isLargeScreen = WeatherTheme.isLargeScreen()
-                val constraints = ConstraintSet {
-                    val navigationRef = createRefFor("navigation")
-                    val contentRef = createRefFor("content")
-
-                    if (isLargeScreen) {
-                        constrain(navigationRef) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        constrain(contentRef) {
-                            top.linkTo(parent.top)
-                            start.linkTo(navigationRef.end)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                            width = Dimension.fillToConstraints
-                        }
-                    } else {
-                        constrain(contentRef) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        }
-                    }
-                }
-
-                ConstraintLayout(
+            Box(modifier = Modifier.fillMaxSize()) {
+                GridBackground(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(bottom = contentPadding.calculateBottomPadding()),
-                    constraintSet = constraints
-                ) {
-                    GridBackground(
-                        modifier = Modifier.background(
+                        .fillMaxSize()
+                        .background(
                             brush = Brush.verticalGradient(
                                 Pair(0f, EsoColors.Violet.copy(alpha = 0f)),
                                 Pair(0.85f, EsoColors.Violet.copy(alpha = 0f)),
                                 Pair(1f, EsoColors.Violet.copy(alpha = 0.3f))
                             )
                         )
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+                ) {
+                    TopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = WeatherTheme.colorPalette.colorScheme.primary
+                        ),
+                        title = {
+                            Headline(screenName = currentScreenName)
+                        },
+                        navigationIcon = {
+                            if (showBackButton) {
+                                Box(
+                                    modifier = Modifier.fillMaxHeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    IconButton(
+                                        onClick = { navController.popBackStack() }
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier.size(WeatherTheme.dimensions.iconSizeButton),
+                                            imageVector = Icons.Default.ArrowBack,
+                                            tint = WeatherTheme.colorPalette.iconTint,
+                                            contentDescription = "backIcon"
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                        modifier = Modifier
+                            .height(height = WeatherTheme.dimensions.titleBarHeight)
                     )
 
-                    if (isLargeScreen) {
-                        EsoNavigationRail(
-                            modifier = Modifier.layoutId("navigation"),
-                            navController = navController
-                        )
+                    val isLargeScreen = WeatherTheme.isLargeScreen()
+                    val constraints = ConstraintSet {
+                        val navigationRef = createRefFor("navigation")
+                        val contentRef = createRefFor("content")
+
+                        if (isLargeScreen) {
+                            constrain(navigationRef) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                bottom.linkTo(parent.bottom)
+                            }
+                            constrain(contentRef) {
+                                top.linkTo(parent.top)
+                                start.linkTo(navigationRef.end)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                                width = Dimension.fillToConstraints
+                            }
+                        } else {
+                            constrain(contentRef) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                            }
+                        }
                     }
 
-                    WeatherNavHost(
+                    ConstraintLayout(
                         modifier = Modifier
-                            .layoutId("content")
-                            .padding(8.dp),
-                        navController = navController,
-                        onColorPaletteSelected = {
-                            activeColorPalette = it
-                        },
-                        onSizeSelected = {
-                            activeDimensionScale = it
+                            .fillMaxSize(),
+                        constraintSet = constraints
+                    ) {
+                        if (isLargeScreen) {
+                            EsoNavigationRail(
+                                modifier = Modifier.layoutId("navigation"),
+                                navController = navController
+                            )
                         }
-                    )
+
+                        WeatherNavHost(
+                            modifier = Modifier
+                                .layoutId("content")
+                                .padding(8.dp)
+                                .windowInsetsPadding(WindowInsets.safeContent),
+                            navController = navController,
+                            onColorPaletteSelected = {
+                                activeColorPalette = it
+                            },
+                            onSizeSelected = {
+                                activeDimensionScale = it
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -237,10 +259,9 @@ class WeatherActivity : AppCompatActivity() {
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
 
         NavigationRail(
-            modifier = Modifier
-                .width(104.dp)
-                .then(modifier),
-            backgroundColor = WeatherTheme.colorPalette.colors.secondaryVariant
+            modifier = modifier
+                .width(104.dp),
+            containerColor = WeatherTheme.colorPalette.colorScheme.secondaryContainer
         ) {
             EsoNavigationRailItem(
                 label = {
@@ -324,7 +345,7 @@ class WeatherActivity : AppCompatActivity() {
         onClick: () -> Unit
     ) {
         val backgroundModifier = if (selected) {
-            Modifier.background(WeatherTheme.colorPalette.colors.secondary)
+            Modifier.background(WeatherTheme.colorPalette.colorScheme.secondary)
         } else {
             Modifier
         }
@@ -342,7 +363,7 @@ class WeatherActivity : AppCompatActivity() {
         ) {
             val inActiveAlpha = 0.4f
             val iconAlpha = if (selected) 1.0f else inActiveAlpha
-            CompositionLocalProvider(LocalContentAlpha provides iconAlpha) {
+            CompositionLocalProvider(LocalContentColor provides WeatherTheme.colorPalette.colorScheme.onBackground.copy(alpha = iconAlpha)) {
                 Box(modifier = Modifier.size(36.dp), contentAlignment = Alignment.Center) {
                     icon()
                 }
@@ -351,12 +372,16 @@ class WeatherActivity : AppCompatActivity() {
             Spacer(Modifier.padding(vertical = 4.dp))
 
             val textStyle = if (selected) {
-                LocalTextStyle.current.copy(color = WeatherTheme.colorPalette.colors.onBackground)
+                LocalTextStyle.current.copy(
+                    color = WeatherTheme.colorPalette.colorScheme.onBackground,
+                    fontSize = 18.sp
+                )
             } else {
                 LocalTextStyle.current.copy(
-                    color = WeatherTheme.colorPalette.colors.onBackground.copy(
+                    color = WeatherTheme.colorPalette.colorScheme.onBackground.copy(
                         alpha = inActiveAlpha
-                    )
+                    ),
+                    fontSize = 18.sp
                 )
             }
             ProvideTextStyle(textStyle) {
@@ -366,93 +391,17 @@ class WeatherActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun EsoBottomNavigation(
+    fun Headline(
         modifier: Modifier = Modifier,
-        navController: NavHostController
+        screenName: String? = null
     ) {
-        val currentBackStackEntry by navController.currentBackStackEntryAsState()
-
-        BottomNavigation(
-            modifier = modifier,
-            backgroundColor = WeatherTheme.colorPalette.colors.secondaryVariant
+        Row(
+            modifier = modifier
+                .fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            BottomNavigationItem(
-                selected = currentBackStackEntry?.destination?.route == Routes.FORECAST,
-                onClick = {
-                    navController.popBackStack(
-                        Routes.FORECAST,
-                        inclusive = false
-                    )
-                },
-                label = {
-                    Text(
-                        stringResource(R.string.forecast_title),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                icon = {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(bottom = 4.dp),
-                        painter = painterResource(id = R.drawable.ic_forecast_sun),
-                        contentDescription = stringResource(R.string.forecast_title),
-                    )
-                }
-            )
-
-            BottomNavigationItem(
-                label = {
-                    Text(
-                        stringResource(R.string.favorite_locations_title_short),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                selected = currentBackStackEntry?.destination?.route == Routes.MANAGE_LOCATIONS
-                        || currentBackStackEntry?.destination?.route == Routes.LOCATION_SEARCH,
-                onClick = {
-                    if (!navController.popBackStack(Routes.MANAGE_LOCATIONS, inclusive = false)) {
-                        navController.navigate(Routes.MANAGE_LOCATIONS)
-                    }
-                },
-                icon = {
-                    Icon(
-                        modifier = Modifier.padding(bottom = 4.dp),
-                        imageVector = Icons.Filled.LocationCity,
-                        contentDescription = stringResource(R.string.favorite_locations_title_short)
-                    )
-                },
-            )
-
-            BottomNavigationItem(
-                label = {
-                    Text(
-                        stringResource(R.string.theme_selection_title),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.Brush,
-                        contentDescription = stringResource(R.string.favorite_locations_title_short)
-                    )
-                },
-                selected = currentBackStackEntry?.destination?.route == Routes.THEME_SELECTION,
-                onClick = {
-                    if (!navController.popBackStack(Routes.THEME_SELECTION, inclusive = false)) {
-                        navController.navigate(Routes.THEME_SELECTION)
-                    }
-                }
-            )
+            Text(text = screenName ?: "Welcome Driver")
         }
-    }
-
-    @Composable
-    fun Headline(screenName: String? = null) {
-        Text(text = screenName ?: "Welcome Driver")
     }
 
     @Composable
@@ -461,7 +410,7 @@ class WeatherActivity : AppCompatActivity() {
         navController: NavHostController,
         onColorPaletteSelected: (ColorPalette) -> Unit,
         onSizeSelected: (Float) -> Unit
-) {
+    ) {
         NavHost(
             navController = navController,
             startDestination = Routes.FORECAST,

@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Warning
@@ -208,14 +208,14 @@ fun ForecastScreenActiveLocationForecast(
     Tile(modifier = modifier) {
         Text(
             text = locationHeadlineText,
-            style = WeatherTheme.typography.h4
+            style = WeatherTheme.typography.headlineMedium
         )
 
         Row(modifier = Modifier.weight(1f)) {
             Text(
                 text = weatherSummary,
                 modifier = Modifier.weight(weight = 1f),
-                style = WeatherTheme.typography.body1
+                style = WeatherTheme.typography.bodyLarge
             )
             Icon(
                 painter = painterResource(id = weatherIcon),
@@ -262,7 +262,7 @@ fun ForecastScreenSavedLocationForecast(
     ) {
         Text(
             text = locationName,
-            style = WeatherTheme.typography.h6,
+            style = WeatherTheme.typography.headlineMedium,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = WeatherTheme.dimensions.titlePadding)

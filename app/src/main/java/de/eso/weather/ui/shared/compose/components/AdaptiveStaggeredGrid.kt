@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import de.eso.weather.ui.shared.compose.WeatherTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AdaptiveStaggeredGrid(
     modifier: Modifier = Modifier,
