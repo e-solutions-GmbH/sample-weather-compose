@@ -1,10 +1,7 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
-
-val composeCompilerVersion = "1.5.14"
-val composeBomVersion = "2024.06.00"
 
 android {
     namespace = "de.eso.weather.domain"
@@ -20,7 +17,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     kotlinOptions {
@@ -34,77 +31,67 @@ android {
     }
 }
 
-val lifecycleVersion = "2.8.3"
-val navigationVersion = "2.7.7"
-
-val koinVersion = "2.2.3"
-val moshiVersion = "1.13.0"
-
-val mockkVersion = "1.12.0"
-val jupiterVersion = "5.7.2"
-val assertjVersion = "3.18.1"
-
 // Main Dependencies
 dependencies {
 
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.core:core-ktx:1.13.1")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core.ktx)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
+    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
 
-    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     // Jetpack Compose
-    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    implementation(platform(libs.androidx.compose.bom))
 
-    implementation("androidx.compose.compiler:compiler:$composeCompilerVersion")
-    implementation("androidx.compose.ui:ui")
+    implementation(libs.androidx.compose.compiler)
+    implementation(libs.androidx.compose.ui)
     // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling")
+    implementation(libs.androidx.compose.ui.tooling)
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation("androidx.compose.foundation:foundation")
+    implementation(libs.androidx.compose.foundation)
     // Material Design
-    implementation("androidx.compose.material:material")
+    implementation(libs.androidx.compose.material)
     // Material design icons
-    implementation("androidx.compose.material:material-icons-core")
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
     // Integration with observables
-    implementation("androidx.compose.runtime:runtime-livedata")
-    implementation("androidx.compose.runtime:runtime-rxjava3")
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.runtime.rxjava3)
     // ConstraintLayout
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation(libs.androidx.constraintlayout.compose)
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.androidx.navigation.compose)
 
-    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
+    implementation(libs.androidx.datastore.preferences.rxjava3)
 
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-scope:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-viewmodel:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-fragment:$koinVersion")
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.scope)
+    implementation(libs.koin.androidx.viewmodel)
+    implementation(libs.koin.androidx.fragment)
 
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation(libs.rxjava3.rxkotlin)
+    implementation(libs.rxjava3.rxandroid)
 
-    implementation("com.squareup.moshi:moshi:$moshiVersion")
-    implementation("com.squareup.moshi:moshi-adapters:$moshiVersion")
-    implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
+    implementation(libs.moshi)
+    implementation(libs.moshi.adapters)
+    implementation(libs.moshi.kotlin)
 }
 
 // Unit Test Dependencies
 dependencies {
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
-    testImplementation("org.assertj:assertj-core:$assertjVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.mockk)
 
-    testImplementation("io.insert-koin:koin-test:$koinVersion")
-    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
+    testImplementation(libs.koin.test)
+    testImplementation(libs.koin.test.junit5)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.jupiter.params)
 }
