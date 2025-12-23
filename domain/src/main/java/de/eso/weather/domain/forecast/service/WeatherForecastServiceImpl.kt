@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
 import java.util.concurrent.TimeUnit.SECONDS
 
+// Koin-IDE-Plugin: Navigation missing. Probably due to abstraction via interface?
 class WeatherForecastServiceImpl(
     scheduler: Scheduler,
     private val forecastProvider: ForecastProvider

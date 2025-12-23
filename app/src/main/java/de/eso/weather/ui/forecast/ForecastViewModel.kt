@@ -18,7 +18,9 @@ import java.util.Optional
 class ForecastViewModel(
     private val weatherForecastService: WeatherForecastService,
     favoriteLocationsRepository: FavoriteLocationsRepository,
+    // Koin-IDE-Plugin: Unaware which Logger is used here. (Displays dropdown instead)
     logger: Logger,
+    logger2: Logger,
     mainScheduler: Scheduler = AndroidSchedulers.mainThread()
 ) : ViewModel() {
     var forecastViewState by mutableStateOf(EmptyForecastViewState)

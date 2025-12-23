@@ -70,9 +70,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.rxjava3)
 
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.scope)
-    implementation(libs.koin.androidx.viewmodel)
-    implementation(libs.koin.androidx.fragment)
 
     implementation(libs.rxjava3.rxkotlin)
     implementation(libs.rxjava3.rxandroid)

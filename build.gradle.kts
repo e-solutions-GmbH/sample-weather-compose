@@ -6,12 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
 }
 
-buildscript {
-    dependencies {
-        classpath(libs.androidx.navigation.safe.args.gradle.plugin)
-    }
-}
-
 subprojects {
     tasks.withType<Test> {
         useJUnitPlatform()

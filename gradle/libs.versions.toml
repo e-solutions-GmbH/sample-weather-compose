@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-android-gradle-plugin = "8.2.2"
+android-gradle-plugin = "8.11.2"
 kotlin = "1.9.24"
 
 # Compose
@@ -24,7 +24,7 @@ datastore = "1.1.1"
 constraintlayout-compose = "1.0.1"
 
 # Dependency Injection
-koin = "2.2.3"
+koin = "3.5.6"
 
 # Reactive
 rxjava3-kotlin = "3.0.1"
@@ -87,9 +87,6 @@ androidx-datastore-preferences-rxjava3 = { module = "androidx.datastore:datastor
 
 # Dependency Injection - Koin
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-scope = { module = "io.insert-koin:koin-androidx-scope", version.ref = "koin" }
-koin-androidx-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koin" }
-koin-androidx-fragment = { module = "io.insert-koin:koin-androidx-fragment", version.ref = "koin" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin" }
 

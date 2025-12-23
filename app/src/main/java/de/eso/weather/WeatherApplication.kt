@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.FragmentFactory
-import de.eso.weather.ui.domainModule
+import de.eso.weather.domain.DomainKoin
+import de.eso.weather.domain.domainModule
 import de.eso.weather.ui.uiModule
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.logger.AndroidLogger
 import org.koin.androidx.fragment.android.KoinFragmentFactory
@@ -25,12 +25,10 @@ open class WeatherApplication : Application() {
          * Do this in a separate method, since it might be necessary to call this method before onCreate().
          */
         internal fun setupDmbAndKoin(context: Context) {
+            DomainKoin.init(domainModule(context))
             startKoin {
                 logger(AndroidLogger(Level.ERROR))
                 androidContext(context)
-                modules(
-                    domainModule
-                )
             }.createEagerInstances()
 
             Log.i("Weather", "setupDMBandKoin($context) finished")
