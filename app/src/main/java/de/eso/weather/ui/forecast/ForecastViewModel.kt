@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import de.eso.weather.domain.forecast.api.WeatherForecastService
 import de.eso.weather.domain.location.api.FavoriteLocationsRepository
+import de.eso.weather.domain.util.Logger
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
@@ -17,6 +18,7 @@ import java.util.Optional
 class ForecastViewModel(
     private val weatherForecastService: WeatherForecastService,
     favoriteLocationsRepository: FavoriteLocationsRepository,
+    logger: Logger,
     mainScheduler: Scheduler = AndroidSchedulers.mainThread()
 ) : ViewModel() {
     var forecastViewState by mutableStateOf(EmptyForecastViewState)

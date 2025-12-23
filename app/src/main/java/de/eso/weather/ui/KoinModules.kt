@@ -20,6 +20,9 @@ import de.eso.weather.domain.location.platform.FavoriteLocationsRepositoryImpl
 import de.eso.weather.domain.location.platform.LocationsProvider
 import de.eso.weather.domain.location.service.LocationServiceImpl
 import de.eso.weather.domain.location.service.LocationsReceiver
+import de.eso.weather.domain.util.DummyLogger
+import de.eso.weather.domain.util.Logger
+import de.eso.weather.domain.util.getLogger
 import de.eso.weather.ui.alert.AlertViewModel
 import de.eso.weather.ui.forecast.ForecastViewModel
 import de.eso.weather.ui.location.favorites.FavoriteLocationsViewModel
@@ -33,7 +36,8 @@ val uiModule = module {
     viewModel {
         ForecastViewModel(
             weatherForecastService = get(),
-            favoriteLocationsRepository = get()
+            favoriteLocationsRepository = get(),
+            logger = getLogger()
         )
     }
 
@@ -55,6 +59,7 @@ val uiModule = module {
 }
 
 val domainModule = module {
+    single<Logger> { DummyLogger() }
     // Forecast
     single<WeatherForecastService> { WeatherForecastServiceImpl(Schedulers.single(), get()) }
     single<ForecastProvider> { WeatherForecastProvider() }
