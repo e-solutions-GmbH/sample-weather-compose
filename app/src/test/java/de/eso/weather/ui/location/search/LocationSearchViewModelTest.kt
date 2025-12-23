@@ -2,8 +2,8 @@ package de.eso.weather.ui.location.search
 
 import de.eso.weather.InstantTaskExecutorExtension
 import de.eso.weather.Locations.AMMERNDORF
-import de.eso.weather.Locations.ERLANGEN
 import de.eso.weather.Locations.ZIRNDORF
+import de.eso.weather.Locations.ERLANGEN
 import de.eso.weather.domain.location.api.FavoriteLocationsRepository
 import de.eso.weather.domain.location.api.LocationService
 import io.mockk.every

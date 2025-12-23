@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
@@ -7,60 +7,31 @@ val composeCompilerVersion = "1.5.14"
 val composeBomVersion = "2024.06.00"
 
 android {
+    namespace = "de.eso.weather.domain"
+    testNamespace = "de.eso.weather.test"
     defaultConfig {
         minSdk = 26
         compileSdk = 34
         targetSdk = 34
-        applicationId = "de.eso.weather.compose"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["coverage"] = "true"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
-        buildFeatures.apply {
-            viewBinding = true
-            compose = true
-        }
-
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-        }
-
-        composeOptions {
-            kotlinCompilerExtensionVersion = composeCompilerVersion
-        }
-
-        kotlinOptions {
-            jvmTarget = "17"
-        }
-
-        testOptions {
-            execution = "ANDROIDX_TEST_ORCHESTRATOR"
-            animationsDisabled = true
-            unitTests.isReturnDefaultValues = true
-        }
-
-        buildTypes {
-            getByName("debug") {
-                isTestCoverageEnabled = true
-            }
-
-            getByName("release") {
-                isMinifyEnabled = true
-                isShrinkResources = true
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
-            }
-        }
+    composeOptions {
+        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
     kotlinOptions {
         jvmTarget = "17"
     }
 
-    namespace = "de.eso.weather"
-    testNamespace = "de.eso.weather.test"
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        animationsDisabled = true
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 val lifecycleVersion = "2.8.3"
@@ -75,7 +46,7 @@ val assertjVersion = "3.18.1"
 
 // Main Dependencies
 dependencies {
-    implementation(project(":domain"))
+
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.core:core-ktx:1.13.1")
 
@@ -136,24 +107,4 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
-}
-
-// androidTest Dependencies
-dependencies {
-    androidTestImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
-    androidTestImplementation("org.assertj:assertj-core:$assertjVersion")
-
-    androidTestImplementation("io.insert-koin:koin-test:$koinVersion")
-
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestUtil("androidx.test:orchestrator:1.4.2")
-
-    // Compose
-    androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

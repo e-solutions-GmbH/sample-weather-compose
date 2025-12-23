@@ -1,7 +1,7 @@
 package de.eso.weather.domain.location.service
 
-import de.eso.weather.Locations.AMMERNDORF
-import de.eso.weather.Locations.ZIRNDORF
+import de.eso.weather.domain.Locations.AMMERNDORF
+import de.eso.weather.domain.Locations.ZIRNDORF
 import de.eso.weather.domain.shared.api.Location
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
